@@ -1,5 +1,13 @@
 package com.team3.presentation;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -36,6 +44,9 @@ public class Login extends Activity implements View.OnClickListener,
 
 	public TextView name;
 	public TextView email;
+
+	public/* static */String personName;
+	public/* static */String accountName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,11 +132,19 @@ public class Login extends Activity implements View.OnClickListener,
 		dialogButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				try {
+					Adduser();
+					Intent i = new Intent(Login.this, MainActivity.class);
+					startActivity(i);
 
-				Intent i = new Intent(Login.this, MainActivity.class);
-				startActivity(i);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					Log.d(TAG, "Error" + e);
+					e.printStackTrace();
+				}
 
 				/* dialog.dismiss(); */
+
 			}
 		});
 
@@ -198,27 +217,98 @@ public class Login extends Activity implements View.OnClickListener,
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		mConnectionProgressDialog.dismiss();
-		String accountName = mPlusClient.getAccountName();
+		accountName = mPlusClient.getAccountName();
 		Toast.makeText(this, accountName + " is connected.", Toast.LENGTH_SHORT)
 				.show();
 		// mPlusClient.loadVisiblePeople(this, Person.Collection.VISIBLE);
 
 		if (mPlusClient.getCurrentPerson() != null) {
 			Person currentPerson = mPlusClient.getCurrentPerson();
-			String personName = currentPerson.getDisplayName();
+			personName = currentPerson.getDisplayName();
 			String personPhoto = currentPerson.getImage().getUrl();
 
 			Log.d(TAG, "User Details \n" + "Email=" + accountName + " Name="
 					+ personName + " Photo URL=" + personPhoto);
 
 			createUserDialog(accountName, personName, personPhoto);
-			// DO NOT DELETE THIS
-			// UserBusiness usrBusiness = new UserBusiness();
-			// usrBusiness.RegisterUser();
+
+			/*
+			 * // DO NOT DELETE THIS UserBusiness usrBusiness = new
+			 * UserBusiness(); usrBusiness.RegisterUser(accountName,
+			 * personName);
+			 */
 
 			// example savetoDb(accountName,personName,personPhoto.getUrl());
 		}
 	}
+
+	// Create GetText Metod
+	public void Adduser() throws UnsupportedEncodingException {
+		String Name;
+		String Email;
+		// Get user defined values
+		Name = name.getText().toString();
+		Email = email.getText().toString();
+
+		// Create data variable for sent values to server
+
+		String data = URLEncoder.encode("name", "UTF-8") + "="
+				+ URLEncoder.encode(Name, "UTF-8");
+
+		data += "&" + URLEncoder.encode("email", "UTF-8") + "="
+				+ URLEncoder.encode(Email, "UTF-8");
+
+		String text = "";
+		BufferedReader reader = null;
+
+		// Send data
+		try {
+
+			// Defined URL where to send data
+			URL url = new URL("http://54.246.220.68/AddUsers1.php");
+
+			// Send POST data request
+
+			URLConnection conn = url.openConnection();
+			conn.setDoOutput(true);
+			OutputStreamWriter wr = new OutputStreamWriter(
+					conn.getOutputStream());
+			wr.write(data);
+			wr.flush();
+
+			// Get the server response
+
+			reader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+
+			// Read Server Response
+			while ((line = reader.readLine()) != null) {
+				// Append server response in string
+				sb.append(line + "\n");
+			}
+
+			text = sb.toString();
+		} catch (Exception ex) {
+
+		} finally {
+			try {
+
+				reader.close();
+			}
+
+			catch (Exception ex) {
+			}
+		}
+
+	}
+
+	/*
+	 * public static String getAccountName() { return accountName; }
+	 * 
+	 * public static String getPersonName() { return personName; }
+	 */
 
 	@Override
 	public void onDisconnected() {

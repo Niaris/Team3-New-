@@ -30,6 +30,9 @@ public class UserBusiness extends Activity {
 	TextView inputName;
 	TextView inputEmail;
 
+	public String name;
+	public String email;
+
 	// url to create new product
 	private static String url_add_user = "http://54.246.220.68/AddUsers.php";
 
@@ -62,24 +65,23 @@ public class UserBusiness extends Activity {
 	/**
 	 * Background Async Task to Create new product
 	 * */
-	public void RegisterUser() {
+	// class RegisterUser extends AsyncTask<String, String, String>
+	public void RegisterUser(String email, String name) {
 
 		/**
 		 * Before starting background thread Show Progress Dialog
 		 * */
 
-		pDialog = new ProgressDialog(UserBusiness.this);
-		pDialog.setMessage("Registering User..");
-		pDialog.setIndeterminate(false);
-		pDialog.setCancelable(true);
-		pDialog.show();
+		/*
+		 * pDialog = new ProgressDialog(UserBusiness.this);
+		 * pDialog.setMessage("Registering User..");
+		 * pDialog.setIndeterminate(false); pDialog.setCancelable(true);
+		 * pDialog.show();
+		 */
 
 		/**
 		 * Creating product
 		 * */
-
-		String name = inputName.getText().toString();
-		String email = inputEmail.getText().toString();
 
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
