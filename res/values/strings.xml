@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="normal">Normal</string>
     <string name="sattelite">Satellite</string>
+    <string name="none">None</string>
     <string name="hybrid">Hybrid</string>
     <string name="none">None</string>
     <string name="terrain">Terrain</string>
@@ -20,5 +21,39 @@
     <string name="checkin_button">Check in</string>
     <string name="title_user_login">Log in</string>
     <string name="main_activity">Main Activity</string>
+    <string name="title_activity_places">Places</string>
+    
+    
+    <string name="str_btn_find">Find</string>
+    <string name="menu_settings">Settings</string>
+    <!--GOOGLE PLACES  -->
+    <string-array name="place_type">
+        <item>airport</item>
+        <item>atm</item>
+        <item>bank</item>
+        <item>bus_station</item>
+        <item>church</item>
+        <item>doctor</item>
+        <item>hospital</item>
+        <item>mosque</item>
+        <item>movie_theater</item>
+        <item>hindu_temple</item>
+        <item>restaurant</item>
+    </string-array>
+ 
+    <string-array name="place_type_name">
+        <item>Airport</item>
+        <item>ATM</item>
+        <item>Bank</item>
+        <item>Bus Station</item>
+        <item>Church</item>
+        <item>Doctor</item>
+        <item>Hospital</item>
+        <item>Mosque</item>
+        <item>Movie Theater</item>
+        <item>Hindu Temple</item>
+        <item>Restaurant</item>
+    </string-array>
+    
 
 </resources>

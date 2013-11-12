@@ -2,7 +2,13 @@ package com.team3.dataaccess;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -16,9 +22,14 @@ public class MySQLConnection {
 	private String DBConnection;
 	@SuppressWarnings("unused")
 	private int serverResponseCode;
+	JSONParser jsonParser;
+	private static String SERVER_URL = "http://54.246.220.68/";
+	private static String ADD_USER_PHP = "AddUsers.php";
+	private static String GET_USER_ID_PHP = "GetUser.php";
 
 	public MySQLConnection() {
 		try {
+			jsonParser = new JSONParser();
 			connectToServer();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -49,8 +60,8 @@ public class MySQLConnection {
 
 	}
 
-	public List<LocationVO> retrieveLocationsByUserPosition(int latitude,
-			int longitude) {
+	public List<LocationVO> retrieveLocationsByUserPosition(double latitude,
+			double longitude) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -63,6 +74,55 @@ public class MySQLConnection {
 	public void AddUser(Login UserDetails) {
 
 	}
+
+	public void RegisterUser(String email, String name) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("name", name));
+		params.add(new BasicNameValuePair("emailAddress", email));
+
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL + ADD_USER_PHP,
+				"POST", params);
+
+		Log.d("Create Response", json.toString());
+
+		try {
+			int success = json.getInt("success");
+			String message = json.getString("message");
+			Log.d("USER", message);
+			if (success == 1) {
+				Log.d("USER", "Details POST");
+			} else {
+
+			}
+		} catch (JSONException e) {
+			Log.e("USER", e.getMessage());
+		}
+	}// Ends RegisterUser
+
+	public void GetUser(String email) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("emailAddress", email));
+
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
+				+ GET_USER_ID_PHP, "GET", params);
+
+		Log.d("Create Response", json.toString());
+
+		try {
+			int success = json.getInt("success");
+			String message = json.getString("message");
+			Log.d("USER", message);
+			if (success == 1) {
+				Log.d("USER", "Details GET");
+			} else {
+				// failed to create product
+			}
+		} catch (JSONException e) {
+			Log.e("USER", e.getMessage());
+		}
+
+	}// Ends GetUser
 
 	public List<ReviewVO> retrieveReviewsList(int locationID) {
 		// TODO Auto-generated method stub

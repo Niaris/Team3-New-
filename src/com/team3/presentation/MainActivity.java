@@ -6,6 +6,7 @@
  * @author Andreas Stavrou (Refactored and Commented)
  * @version 1.0 - Finished 6 October 2013 | Refactored FINISHED on 16 October 2013 
  */
+
 /** 
  * FR2.
  * MainActivity.java now saves the user's location and also uploads it to the web server.
@@ -18,6 +19,9 @@
  */
 
 package com.team3.presentation;
+
+import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,12 +51,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.team3.R;
+import com.team3.business.LocationBusiness;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.dataaccess.UploadFiletoServer;
 import com.team3.dataaccess.XMLGenerator;
@@ -66,6 +73,7 @@ import com.team3.utils.MapStateManager;
  * be able to work. I.e. display the map, get coordinates and use the
  * GooglePlayServicesClient on call backs and on connection failed listeners.
  */
+
 public class MainActivity extends FragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
@@ -79,7 +87,10 @@ public class MainActivity extends FragmentActivity implements
 	private UploadFiletoServer fileUploader;
 	private MySQLConnection DBConnection;
 	private LocationVO CurrentLocation;
+	private LocationBusiness locationBUS;
+	private HashMap<Marker, LocationVO> markerLocationMap;
 	private int UserID = 1; // TODO get UserID from logged user
+	TextView tvUserName;
 
 	/**
 	 * Method onCreate is used when the page first loads. It will use the method
@@ -94,11 +105,16 @@ public class MainActivity extends FragmentActivity implements
 	 *            that associated activity when it gets paused.
 	 * @return void Returns a void object.
 	 */
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//DBConnection = new MySQLConnection(); FIXME (CHARA) 
-		//DBConnection.open(); FIXME (CHARA) 
+
+		// String email = getIntent().getExtras().getString("UserEmail");
+
+		DBConnection = new MySQLConnection();
+		locationBUS = new LocationBusiness(DBConnection);
+		markerLocationMap = new HashMap<Marker, LocationVO>();
 
 		xmlGenerator = new XMLGenerator();
 		fileUploader = new UploadFiletoServer();
@@ -122,7 +138,32 @@ public class MainActivity extends FragmentActivity implements
 			setContentView(R.layout.activity_main);
 		}
 
+		Intent intent = getIntent();
+		String userEmail = intent.getStringExtra("UserEmail");
+		Toast.makeText(this, "Logged user email is " + userEmail,
+				Toast.LENGTH_LONG).show();
 	}// Ends onCreate
+
+	private void loadRegisteredLocations() {
+		List<LocationVO> locList = locationBUS.retrieveLocationsByUserPosition(
+				CurrentLocation.getLatitude(), CurrentLocation.getLongitude());
+		markerLocationMap.clear();
+		for (LocationVO loc : locList) {
+			Marker tempMarker = addRedMarker(loc.getLatitude(),
+					loc.getLongitude(), loc.getAddress());
+			markerLocationMap.put(tempMarker, loc);
+		}
+	}
+
+	private Marker addRedMarker(double latitude, double longitude,
+			String address) {
+		LatLng ll = new LatLng(latitude, longitude);
+		return Team3Map.addMarker(new MarkerOptions()
+				.position(ll)
+				.title(address)
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+	}
 
 	/**
 	 * Method onCreateOptionsMenu inflates the menu. This adds items to the
@@ -132,6 +173,7 @@ public class MainActivity extends FragmentActivity implements
 	 *            menu Object which holds actions and options.
 	 * @return boolean Returns True to display menu, False to not display menu.
 	 */
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -149,6 +191,7 @@ public class MainActivity extends FragmentActivity implements
 	 *         updated, False to indicate Google Service neither available nor
 	 *         updated.
 	 */
+
 	public boolean servicesOK() {
 		int isAvailable = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(this);
@@ -172,11 +215,29 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @return boolean Returns True if Map is initialized, False if it is not.
 	 */
+
 	private boolean initMap() {
 		if (Team3Map == null) {
 			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map);
 			Team3Map = mapFrag.getMap();
+			Team3Map.setOnMarkerClickListener(new OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					LocationVO loc = markerLocationMap.get(marker);
+					if (loc != null) {
+						Toast.makeText(getBaseContext(), loc.getAddress(),
+								Toast.LENGTH_SHORT).show();
+						Intent intent = new Intent(getBaseContext(),
+								ReviewsActivity.class);
+						intent.putExtra("LocationVO", loc);
+						intent.putExtra("UserID", UserID);
+						startActivity(intent);
+					}
+					// TODO pass to the new screen to show the reviews!
+					return false;
+				}
+			});
 
 		}
 		return (Team3Map != null);
@@ -237,6 +298,7 @@ public class MainActivity extends FragmentActivity implements
 	 * @param int color Holds the color' integer value.
 	 * @return void Returns a void object.
 	 */
+
 	private void setTextViewColor(int color) {
 		TextView tvLat = (TextView) this.findViewById(R.id.txLat);
 		TextView tvLon = (TextView) this.findViewById(R.id.txLon);
@@ -254,12 +316,13 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @return void Return a void object.
 	 */
+
 	@Override
 	protected void onStop() {
 		super.onStop();
 		MapStateManager mgr = new MapStateManager(this);
 		mgr.saveMapState(Team3Map);
-		//DBConnection.close(); FIXME (CHARA) 
+		DBConnection.close();
 	}// End onStop
 
 	/**
@@ -269,6 +332,7 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @return void Return a void object.
 	 */
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -300,6 +364,7 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @return void Return a void object.
 	 */
+
 	protected void gotoCurrentLocation() {
 		Location currentLocation = mLocationClient.getLastLocation();
 		if (currentLocation == null) {
@@ -315,6 +380,7 @@ public class MainActivity extends FragmentActivity implements
 	 * Method onConnectionFailed is used for when the connection fails to
 	 * display a toast message to inform the user.
 	 */
+
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		Toast.makeText(this, "Connection Failed. Please try again",
@@ -333,6 +399,7 @@ public class MainActivity extends FragmentActivity implements
 	 *            service.
 	 * @return void Return a void object.
 	 */
+
 	@Override
 	public void onConnected(Bundle arg0) {
 		Toast.makeText(this, "Connected Successfully", Toast.LENGTH_SHORT)
@@ -350,6 +417,7 @@ public class MainActivity extends FragmentActivity implements
 	 * automatically ever 1 minute (60000 milliseconds in this) In other words
 	 * it refreshes the location and shows the new coordinates.
 	 */
+
 	private void requestLocationUpdates() {
 		LocationRequest request = LocationRequest.create();
 		request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -358,15 +426,17 @@ public class MainActivity extends FragmentActivity implements
 		mLocationClient.requestLocationUpdates(request, this);
 	}// Ends requestLocationUpdates
 
-	@Override
 	/**
 	 * Method onLocationChanged responsible for updating Address Description of
 	 * the updated location.
 	 * 
-	 * @param Location loc hold the value of the updated location.
+	 * @param Location
+	 *            loc hold the value of the updated location.
 	 * 
 	 * @return Returns a void object.
 	 */
+
+	@Override
 	public void onLocationChanged(Location loc) {
 
 		String Date = DateTimeManipulator.getCurrentDate();
@@ -404,32 +474,35 @@ public class MainActivity extends FragmentActivity implements
 
 			tvAddress.setText(location_string);
 
-			CurrentLocation = new LocationVO(location_string, LAT, LONG);
+			CurrentLocation = new LocationVO(location_string, LAT, LONG, "");
+			loadRegisteredLocations();
 
 			// This gives the device a UNIQUE ID (NOTE: Try to add this to
 			// another Class).
 			String deviceId = Secure.getString(this.getContentResolver(),
 					Secure.ANDROID_ID);
 
-			 /* IMPORTANT!!! Left this part of the code commented for now, because we have limited 
-			 * requests to the server
-			 */
-			// Calls generateXML method in order to save the details to an XML
-			// file
 			/*
-			 * try { xmlGenerator.generate(Date, Time, deviceId, loc, Address);
-			 * Toast.makeText(this, "File has been created.",
+			 * IMPORTANT!!! Left this part of the code commented for now,
+			 * because we have limited requests to the server
+			 * 
+			 * // Calls generateXML method in order to save the details to an
+			 * XML // file
+			 * 
+			 * 
+			 * try { xmlGenerator.generate(Date, Time, deviceId, loc,
+			 * location_string); Toast.makeText(this, "File has been created.",
 			 * Toast.LENGTH_SHORT).show(); } catch (Exception e) {
 			 * Toast.makeText(this, "An error has occured. Restart the app.",
 			 * Toast.LENGTH_SHORT).show(); }
 			 * 
-			 * // Calls uploadToServer in order to upload the xml file to the //
-			 * server. try { fileUploader.upload(Date, Time, deviceId); } catch
-			 * (Exception e) { Toast.makeText(this, "An error has occured" +
-			 * e.getMessage(), Toast.LENGTH_SHORT).show(); }
+			 * // Calls uploadToServer in order to upload the xml file to the
+			 * //server. try { fileUploader.upload(Date, Time, deviceId); }
+			 * catch (Exception e) { Toast.makeText(this, "An error has occured"
+			 * + e.getMessage(), Toast.LENGTH_SHORT).show(); }
 			 * Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show();
 			 */
-			} catch (JSONException e1) {
+		} catch (JSONException e1) {
 			Toast.makeText(this, "Error: " + e1.getMessage(),
 					Toast.LENGTH_SHORT).show();
 			e1.printStackTrace();
@@ -441,17 +514,22 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * update the marker for the Current Location of the user on the map
 	 * according to the updated latitude and longitude of the user.
+	 * 
 	 * @param latitude
 	 * @param longitude
 	 * @param title
 	 */
+
 	private void updateCurrentLocationMarker(double latitude, double longitude) {
 		if (marker != null) {
 			marker.remove();
 		}
 		LatLng ll = new LatLng(latitude, longitude);
-		marker = Team3Map.addMarker(new MarkerOptions().position(ll).title(
-				"You are here"));
+		marker = Team3Map.addMarker(new MarkerOptions()
+				.position(ll)
+				.title("You are here")
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 		CameraUpdate update = CameraUpdateFactory
 				.newLatLngZoom(ll, DEFAULTZOOM);
 		Team3Map.animateCamera(update);
@@ -463,6 +541,7 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @return void Returns a void object.
 	 */
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -475,6 +554,7 @@ public class MainActivity extends FragmentActivity implements
 	 * 
 	 * @return void
 	 */
+
 	public void checkIn(View view) {
 		Intent intent = new Intent(this, CheckInActivity.class);
 		if (!CurrentLocation.getAddress().isEmpty()
