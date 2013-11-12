@@ -233,6 +233,7 @@ containing a value of this type.
         public static final int commentArea=0x7f05000d;
         public static final int dialogButtonOK=0x7f050030;
         public static final int gallery1=0x7f050025;
+        public static final int googlePlaces=0x7f05003c;
         public static final int gotoCurrentLocation=0x7f05003b;
         public static final int hybrid=0x7f050004;
         public static final int imagePathArea=0x7f050007;
@@ -255,6 +256,8 @@ containing a value of this type.
         public static final int reviewUser=0x7f050031;
         public static final int reviewsList=0x7f050026;
         public static final int satellite=0x7f050002;
+        public static final int showAllSuggestions=0x7f05003d;
+        public static final int showNoSuggestions=0x7f05003e;
         public static final int sign_in_button=0x7f050028;
         public static final int sign_out_button=0x7f050029;
         public static final int spr_place_type=0x7f05000f;
@@ -397,10 +400,10 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f060013;
         public static final int current_location=0x7f060022;
         public static final int hello_world=0x7f06001c;
-        public static final int hybrid=0x7f060020;
+        public static final int hybrid=0x7f06001f;
         public static final int main_activity=0x7f06002c;
         public static final int menu_settings=0x7f06002f;
-        public static final int none=0x7f06001f;
+        public static final int none=0x7f060020;
         public static final int normal=0x7f06001d;
         public static final int rate_location_text=0x7f060027;
         public static final int sattelite=0x7f06001e;

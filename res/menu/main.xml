@@ -26,4 +26,20 @@
         android:id="@+id/gotoCurrentLocation"
         android:showAsAction="always"
         android:title="@string/current_location"/>
+     
+     <item
+        android:id="@+id/googlePlaces"
+        android:showAsAction="always"
+        android:title="See suggested places" >
+        <menu>
+            <item         
+                android:id="@+id/showAllSuggestions"
+                android:title="Show All" />
+            
+            <item         
+                android:id="@+id/showNoSuggestions"
+                android:title="Hide All" />   
+        </menu>
+         
+         </item>
 </menu>

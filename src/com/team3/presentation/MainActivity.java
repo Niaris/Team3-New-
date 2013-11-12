@@ -20,6 +20,7 @@
 
 package com.team3.presentation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,11 +35,17 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings.Secure;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +74,7 @@ import com.team3.entities.LocationVO;
 import com.team3.utils.AddressConversion;
 import com.team3.utils.DateTimeManipulator;
 import com.team3.utils.MapStateManager;
+import com.team3.utils.PlaceJSONParser;
 
 /**
  * The public class must extend and implement the following in order for it to
@@ -89,8 +97,10 @@ public class MainActivity extends FragmentActivity implements
 	private LocationVO CurrentLocation;
 	private LocationBusiness locationBUS;
 	private HashMap<Marker, LocationVO> markerLocationMap;
+	private HashMap<Marker, LocationVO> markerSuggestionMap;
 	private int UserID = 1; // TODO get UserID from logged user
 	TextView tvUserName;
+	private String[] mPlaceType;
 
 	/**
 	 * Method onCreate is used when the page first loads. It will use the method
@@ -115,9 +125,10 @@ public class MainActivity extends FragmentActivity implements
 		DBConnection = new MySQLConnection();
 		locationBUS = new LocationBusiness(DBConnection);
 		markerLocationMap = new HashMap<Marker, LocationVO>();
-
+		markerSuggestionMap = new HashMap<Marker, LocationVO>();
 		xmlGenerator = new XMLGenerator();
 		fileUploader = new UploadFiletoServer();
+
 		if (servicesOK()) {
 			setContentView(R.layout.activity_map);
 
@@ -177,6 +188,30 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
+		/*
+		 * mPlaceType = getResources().getStringArray(R.array.place_type);
+		 * String[] mPlaceTypeName =
+		 * getResources().getStringArray(R.array.place_type_name);
+		 * ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		 * android.R.layout.simple_spinner_dropdown_item, mPlaceTypeName);
+		 * 
+		 * MenuItem itemPlaces = menu.findItem(R.id.googlePlaces); Menu subMenu
+		 * = itemPlaces.getSubMenu(); Spinner mSprPlaceType = (Spinner)
+		 * MenuItemCompat
+		 * .getActionView(subMenu.findItem(R.id.item_spinnerSuggestions));
+		 * mSprPlaceType.setAdapter(adapter);
+		 * mSprPlaceType.setOnItemSelectedListener(new OnItemSelectedListener()
+		 * {
+		 * 
+		 * @Override public void onItemSelected(AdapterView<?> parentView, View
+		 * selectedItemView, int position, long id) {
+		 * showSuggestedPlaces(mPlaceType[position]); }
+		 * 
+		 * @Override public void onNothingSelected(AdapterView<?> arg0) { //
+		 * TODO Auto-generated method stub
+		 * 
+		 * } });
+		 */
 		return true;
 	}// Ends onCreateOptionsMenu
 
@@ -284,12 +319,71 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.gotoCurrentLocation:
 			gotoCurrentLocation();
 			break;
+		case R.id.showAllSuggestions:
+			showSuggestedPlaces("ALL");
+			break;
+		case R.id.showNoSuggestions:
+			showSuggestedPlaces("NONE");
+			break;
 		default:
 			break;
 		}// Ends Switch
 
 		return super.onOptionsItemSelected(item);
 	}// End onOptionsItemSelected
+
+	private void showSuggestedPlaces(String placeType) {
+		for (Marker marker : markerSuggestionMap.keySet()) {
+			marker.remove();
+		}
+		markerSuggestionMap.clear();
+		if (!placeType.equals("NONE")) {
+			StringBuilder sb = new StringBuilder(
+					"https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+			sb.append("location=" + CurrentLocation.getLatitude() + ","
+					+ CurrentLocation.getLongitude());
+			sb.append("&radius=250");
+			if (!placeType.equals("ALL")) {
+				sb.append("&types=" + placeType);
+			}
+			sb.append("&sensor=true");
+			sb.append("&key=AIzaSyAJ4Xdc6Nn4aNUdl7ZLLU5zEwFsk3VRmrg");
+			PlaceJSONParser placeJsonParser = new PlaceJSONParser();
+			String response;
+			try {
+				response = placeJsonParser.downloadUrl(sb.toString());
+				List<HashMap<String, String>> places = null;
+				JSONObject jObject = new JSONObject(response);
+				places = placeJsonParser.parse(jObject);
+				for (Marker marker : markerSuggestionMap.keySet()) {
+					marker.remove();
+				}
+				markerSuggestionMap.clear();
+
+				for (HashMap<String, String> hmPlace : places) {
+					double lat = Double.parseDouble(hmPlace.get("lat"));
+					double lng = Double.parseDouble(hmPlace.get("lng"));
+					String name = hmPlace.get("place_name");
+
+					Marker newMarker = Team3Map
+							.addMarker(new MarkerOptions()
+									.position(new LatLng(lat, lng))
+									.title(name)
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+					markerSuggestionMap.put(newMarker, new LocationVO("", lat,
+							lng, name));
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
 
 	/**
 	 * Method setTextViewColor changes the text' color of the Address'

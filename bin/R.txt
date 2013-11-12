@@ -78,6 +78,7 @@ int id btn_find 0x7f050010
 int id commentArea 0x7f05000d
 int id dialogButtonOK 0x7f050030
 int id gallery1 0x7f050025
+int id googlePlaces 0x7f05003c
 int id gotoCurrentLocation 0x7f05003b
 int id hybrid 0x7f050004
 int id imagePathArea 0x7f050007
@@ -100,6 +101,8 @@ int id reviewRating 0x7f050034
 int id reviewUser 0x7f050031
 int id reviewsList 0x7f050026
 int id satellite 0x7f050002
+int id showAllSuggestions 0x7f05003d
+int id showNoSuggestions 0x7f05003e
 int id sign_in_button 0x7f050028
 int id sign_out_button 0x7f050029
 int id spr_place_type 0x7f05000f
@@ -166,10 +169,10 @@ int string common_signin_button_text 0x7f060012
 int string common_signin_button_text_long 0x7f060013
 int string current_location 0x7f060022
 int string hello_world 0x7f06001c
-int string hybrid 0x7f060020
+int string hybrid 0x7f06001f
 int string main_activity 0x7f06002c
 int string menu_settings 0x7f06002f
-int string none 0x7f06001f
+int string none 0x7f060020
 int string normal 0x7f06001d
 int string rate_location_text 0x7f060027
 int string sattelite 0x7f06001e

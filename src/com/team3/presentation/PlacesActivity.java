@@ -43,9 +43,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.team3.R;
-import com.team3.dataaccess.PlaceJSONParser;
 import com.team3.utils.AddressConversion;
 import com.team3.utils.DateTimeManipulator;
+import com.team3.utils.PlaceJSONParser;
 
 public class PlacesActivity extends FragmentActivity implements
 		LocationListener {
@@ -58,6 +58,8 @@ public class PlacesActivity extends FragmentActivity implements
 
 	double mLAT = 0;
 	double mLONG = 0;
+	double LAT = 50.865017;
+	double LONG = -0.089661;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,18 +149,70 @@ public class PlacesActivity extends FragmentActivity implements
 
 					StringBuilder sb = new StringBuilder(
 							"https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-					sb.append("location=" + mLAT + "," + mLONG);
-					sb.append("&radius=5000");
+					sb.append("location=" + LAT + "," + LONG);
+					sb.append("&radius=250");
 					sb.append("&types=" + type);
 					sb.append("&sensor=true");
-					sb.append("&key=AIzaSyBDx9xtq__zKhjqs5JYUaOKUpwyofsXxpY");
+					sb.append("&key=AIzaSyAJ4Xdc6Nn4aNUdl7ZLLU5zEwFsk3VRmrg");
+					try {
+						String response = downloadUrl(sb.toString());
+						
+						List<HashMap<String, String>> places = null;
+						PlaceJSONParser placeJsonParser = new PlaceJSONParser();
+						JSONObject jObject = new JSONObject(response);
+						places = placeJsonParser.parse(jObject);
+							mGoogleMap.clear();
 
+						for (int i = 0; i < places.size(); i++) {
+
+							// Creating a marker
+							MarkerOptions markerOptions = new MarkerOptions();
+
+							// Getting a place from the places list
+							HashMap<String, String> hmPlace = places.get(i);
+
+							// Getting latitude of the place
+							double lat = Double.parseDouble(hmPlace.get("lat"));
+
+							// Getting longitude of the place
+							double lng = Double.parseDouble(hmPlace.get("lng"));
+
+							// Getting name
+							String name = hmPlace.get("place_name");
+
+							// Getting vicinity
+							String vicinity = hmPlace.get("vicinity");
+
+							LatLng latLng = new LatLng(lat, lng);
+
+							// Setting the position for the marker
+							markerOptions.position(latLng);
+
+							// Setting the title for the marker.
+							// This will be displayed on taping the marker
+							markerOptions.title(name + " : " + vicinity);
+
+							// Placing a marker on the touched position
+							mGoogleMap.addMarker(markerOptions);
+						}
+					
+						
+			String token = response.substring(response.lastIndexOf("{") + 1);
+			//			sb.append("&pagetoken=" + token);
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					// Creating a new non-ui thread task to download json data
-					PlacesTask placesTask = new PlacesTask();
+		//			PlacesTask placesTask = new PlacesTask();
 
 					// Invokes the "doInBackground()" method of the class
 					// PlaceTask
-					placesTask.execute(sb.toString());
+			//		placesTask.execute(sb.toString());
 
 				}
 			});
@@ -197,7 +251,6 @@ public class PlacesActivity extends FragmentActivity implements
 			data = sb.toString();
 
 			br.close();
-
 		} catch (Exception e) {
 			Log.d("Exception while downloading url", e.toString());
 		} finally {
@@ -251,10 +304,10 @@ public class PlacesActivity extends FragmentActivity implements
 			PlaceJSONParser placeJsonParser = new PlaceJSONParser();
 
 			try {
-				jObject = new JSONObject(jsonData[0]);
+	jObject = new JSONObject(jsonData[0]);
 
 				/** Getting the parsed data as a List construct */
-				places = placeJsonParser.parse(jObject);
+//				places = placeJsonParser.parse(jObject);
 
 			} catch (Exception e) {
 				Log.d("Exception", e.toString());
@@ -267,7 +320,7 @@ public class PlacesActivity extends FragmentActivity implements
 		protected void onPostExecute(List<HashMap<String, String>> list) {
 
 			// Clears all the existing markers
-			mGoogleMap.clear();
+	/*		mGoogleMap.clear();
 
 			for (int i = 0; i < list.size(); i++) {
 
@@ -301,7 +354,8 @@ public class PlacesActivity extends FragmentActivity implements
 				// Placing a marker on the touched position
 				mGoogleMap.addMarker(markerOptions);
 			}
-		}
+		*/
+			}
 	}
 
 	@Override
@@ -359,9 +413,9 @@ public class PlacesActivity extends FragmentActivity implements
 
 	@Override
 	public void onLocationChanged(Location loc) {
-		double LAT = loc.getLatitude();
-		double LON = loc.getLongitude();
-		LatLng latLng = new LatLng(LAT, LON);
+		LAT = loc.getLatitude();
+		LONG = loc.getLongitude();
+		LatLng latLng = new LatLng(LAT, LONG);
 
 		mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 		mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
@@ -376,7 +430,7 @@ public class PlacesActivity extends FragmentActivity implements
 
 		// Text View for showing Longitude
 		TextView tvLot = (TextView) this.findViewById(R.id.txLongitude);
-		tvLot.setText("Longitude: " + String.valueOf(LON));
+		tvLot.setText("Longitude: " + String.valueOf(LONG));
 
 		// Text View for showing Date and Time
 		TextView tvDateTime = (TextView) this.findViewById(R.id.txtTime);
@@ -387,7 +441,7 @@ public class PlacesActivity extends FragmentActivity implements
 
 		// This gets the Address of the current location through
 		// AddressConversion.java using Json.
-		JSONObject ret = AddressConversion.getLocationInfo(LAT, LON);
+		JSONObject ret = AddressConversion.getLocationInfo(LAT, LONG);
 		JSONObject location;
 		String location_string;
 		try {
