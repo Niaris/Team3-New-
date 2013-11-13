@@ -141,6 +141,7 @@ public class MainActivity extends FragmentActivity implements
 			if (initMap()) {
 				mLocationClient = new LocationClient(this, this, this);
 				mLocationClient.connect();
+				setUpWindowInfoEvent();
 			} else {
 				Toast.makeText(this, "Map not available!", Toast.LENGTH_SHORT)
 						.show();
@@ -154,6 +155,18 @@ public class MainActivity extends FragmentActivity implements
 		Toast.makeText(this, "Logged user email is " + userEmail,
 				Toast.LENGTH_LONG).show();
 	}// Ends onCreate
+
+	private void setUpWindowInfoEvent() {
+		Team3Map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				if (markerSuggestionMap.containsKey(marker)) {
+					gotoCheckInActivity(markerSuggestionMap.get(marker));
+				}
+			}
+		});
+	}
 
 	private void loadRegisteredLocations() {
 		List<LocationVO> locList = locationBUS.retrieveLocationsByUserPosition(
@@ -342,7 +355,7 @@ public class MainActivity extends FragmentActivity implements
 					"https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
 			sb.append("location=" + CurrentLocation.getLatitude() + ","
 					+ CurrentLocation.getLongitude());
-			sb.append("&radius=250");
+			sb.append("&radius=50");
 			if (!placeType.equals("ALL")) {
 				sb.append("&types=" + placeType);
 			}
@@ -364,14 +377,16 @@ public class MainActivity extends FragmentActivity implements
 					double lat = Double.parseDouble(hmPlace.get("lat"));
 					double lng = Double.parseDouble(hmPlace.get("lng"));
 					String name = hmPlace.get("place_name");
-
+					String vicinity = hmPlace.get("vicinity");
 					Marker newMarker = Team3Map
 							.addMarker(new MarkerOptions()
 									.position(new LatLng(lat, lng))
 									.title(name)
+									.snippet(
+											"Press this window to check-in here")
 									.icon(BitmapDescriptorFactory
 											.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-					markerSuggestionMap.put(newMarker, new LocationVO("", lat,
+					markerSuggestionMap.put(newMarker, new LocationVO(vicinity, lat,
 							lng, name));
 				}
 			} catch (IOException e) {
@@ -650,14 +665,35 @@ public class MainActivity extends FragmentActivity implements
 	 */
 
 	public void checkIn(View view) {
-		Intent intent = new Intent(this, CheckInActivity.class);
-		if (!CurrentLocation.getAddress().isEmpty()
-				&& CurrentLocation.getLatitude() != 0
-				&& CurrentLocation.getLongitude() != 0) {
-			intent.putExtra("LocationVO", CurrentLocation);
-			intent.putExtra("UserID", UserID);
-			startActivity(intent);
+		LocationVO loc = getClosestRegisteredPlace();
+		if (loc == null){
+			loc = CurrentLocation;
+		}	
+		gotoCheckInActivity(loc);
+	}
+
+	private LocationVO getClosestRegisteredPlace() {
+		LocationVO closestPlace = null;
+		float minDistance = 50;
+		for (LocationVO loc : markerLocationMap.values()) {
+			float[] results = new float[1];
+			Location.distanceBetween(loc.getLatitude(), loc.getLongitude(),
+					CurrentLocation.getLatitude(),
+					CurrentLocation.getLongitude(), results);
+			if (results[0] < minDistance) {
+				closestPlace = loc;
+				minDistance = results[0];
+				Log.d("LALALA", String.valueOf(loc.getID()));
+			}
 		}
+		return closestPlace;
+	}
+
+	private void gotoCheckInActivity(LocationVO location) {
+		Intent intent = new Intent(this, CheckInActivity.class);
+		intent.putExtra("LocationVO", location);
+		intent.putExtra("UserID", UserID);
+		startActivity(intent);
 	}
 
 }// Ends MainActivity

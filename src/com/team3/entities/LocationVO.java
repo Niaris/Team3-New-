@@ -2,6 +2,8 @@ package com.team3.entities;
 
 import java.io.Serializable;
 
+import android.location.Location;
+
 public class LocationVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -48,7 +50,5 @@ public class LocationVO implements Serializable {
 	public void setName(String name) {
 		Name = name;
 	}
-	
-	
 	
 }

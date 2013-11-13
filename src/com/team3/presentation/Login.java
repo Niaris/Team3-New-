@@ -227,7 +227,7 @@ public class Login extends Activity implements View.OnClickListener,
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
 				Intent intent = new Intent(getBaseContext(),
-						PlacesActivity.class);
+						MainActivity.class);
 				intent.putExtra("UserEmail", email);
 
 				finish();

@@ -91,6 +91,7 @@ public class PlaceJSONParser {
 		String vicinity = "-NA-";
 		String latitude = "";
 		String longitude = "";
+		String address = "";
 
 		try {
 			// Extracting Place name, if available
@@ -102,16 +103,22 @@ public class PlaceJSONParser {
 			if (!jPlace.isNull("vicinity")) {
 				vicinity = jPlace.getString("vicinity");
 			}
+			
+			// Extracting Address, if available
+			if (!jPlace.isNull("formatted_address")) {
+				address = jPlace.getString("formatted_address");
+			}
 
 			latitude = jPlace.getJSONObject("geometry")
 					.getJSONObject("location").getString("lat");
 			longitude = jPlace.getJSONObject("geometry")
 					.getJSONObject("location").getString("lng");
-
+			
 			place.put("place_name", placeName);
 			place.put("vicinity", vicinity);
 			place.put("lat", latitude);
 			place.put("lng", longitude);
+			place.put("address", address);
 
 		} catch (JSONException e) {
 			e.printStackTrace();

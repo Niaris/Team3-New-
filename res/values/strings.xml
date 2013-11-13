@@ -17,7 +17,7 @@
     <string name="rate_location_text">Rate the location:</string>
     <string name="add_comment_text">Add a Comment:</string>
     <string name="save_review_button">Save Review</string>
-    <string name="checkin_button">Check in</string>
+    <string name="checkin_button">Check in on my Current Location</string>
     <string name="title_user_login">Log in</string>
     <string name="main_activity">Main Activity</string>
     <string name="title_activity_places">Places</string>
