@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="84dp"
+        android:text="@string/user_name" />
+
+    <EditText
+        android:id="@+id/etUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvUserName"
+        android:layout_marginLeft="16dp"
+        android:ems="10"
+        android:hint="@string/user_name_hint" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/tvAboutMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etUserName"
+        android:layout_marginLeft="16dp"
+        android:text="@string/about_me" />
+
+    <EditText
+        android:id="@+id/etAboutMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvAboutMe"
+        android:layout_marginLeft="16dp"
+        android:ems="10"
+        android:hint="@string/about_me_hint"
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:id="@+id/tvGooglePlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etAboutMe"
+        android:layout_marginLeft="16dp"
+        android:text="@string/google_plus_account" />
+
+    <EditText
+        android:id="@+id/etGooglePlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvGooglePlus"
+        android:layout_marginLeft="16dp"
+        android:ems="10"
+        android:hint="@string/google_plus_account_hint"
+        android:inputType="textEmailAddress" />
+
+    <TextView
+        android:id="@+id/tvWhatsApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etGooglePlus"
+        android:layout_marginLeft="16dp"
+        android:text="@string/whats_app_account" />
+
+    <EditText
+        android:id="@+id/etWhatsApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvWhatsApp"
+        android:layout_below="@+id/tvWhatsApp"
+        android:layout_marginLeft="15dp"
+        android:ems="10" 
+        android:hint="@string/whats_app_account_hint"/>
+
+    <Button
+        android:id="@+id/btSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etWhatsApp"
+        android:layout_marginTop="24dp"
+        android:layout_toRightOf="@+id/tvUserName"
+        android:text="@string/button_save_user_profile"
+        android:onClick="saveUserProfile" />
+
+    <TextView
+        android:id="@+id/tvEmailAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvUserName"
+        android:layout_alignRight="@+id/tvAboutMe"
+        android:layout_marginBottom="36dp"
+        android:text="@string/your_email" />
+
+    <TextView
+        android:id="@+id/tvShowEmailAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvEmailAddress"
+        android:layout_alignBottom="@+id/tvEmailAddress"
+        android:layout_alignLeft="@+id/btSave"
+        android:layout_marginLeft="24dp"
+        android:text="msolomonidou12@googlemail.com" 
+         />
+
+    <Button
+        android:id="@+id/btCancelEditDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btSave"
+        android:layout_alignBottom="@+id/btSave"
+        android:layout_marginLeft="29dp"
+        android:layout_toRightOf="@+id/btSave"
+        android:text="@string/btn_cancel_edit_details" />
+
+</RelativeLayout>

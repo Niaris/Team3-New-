@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -156,12 +157,12 @@ public class PlacesActivity extends FragmentActivity implements
 					sb.append("&key=AIzaSyAJ4Xdc6Nn4aNUdl7ZLLU5zEwFsk3VRmrg");
 					try {
 						String response = downloadUrl(sb.toString());
-						
+
 						List<HashMap<String, String>> places = null;
 						PlaceJSONParser placeJsonParser = new PlaceJSONParser();
 						JSONObject jObject = new JSONObject(response);
 						places = placeJsonParser.parse(jObject);
-							mGoogleMap.clear();
+						mGoogleMap.clear();
 
 						for (int i = 0; i < places.size(); i++) {
 
@@ -195,11 +196,11 @@ public class PlacesActivity extends FragmentActivity implements
 							// Placing a marker on the touched position
 							mGoogleMap.addMarker(markerOptions);
 						}
-					
-						
-			String token = response.substring(response.lastIndexOf("{") + 1);
-			//			sb.append("&pagetoken=" + token);
-						
+
+						String token = response.substring(response
+								.lastIndexOf("{") + 1);
+						// sb.append("&pagetoken=" + token);
+
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -208,11 +209,11 @@ public class PlacesActivity extends FragmentActivity implements
 						e.printStackTrace();
 					}
 					// Creating a new non-ui thread task to download json data
-		//			PlacesTask placesTask = new PlacesTask();
+					// PlacesTask placesTask = new PlacesTask();
 
 					// Invokes the "doInBackground()" method of the class
 					// PlaceTask
-			//		placesTask.execute(sb.toString());
+					// placesTask.execute(sb.toString());
 
 				}
 			});
@@ -304,10 +305,10 @@ public class PlacesActivity extends FragmentActivity implements
 			PlaceJSONParser placeJsonParser = new PlaceJSONParser();
 
 			try {
-	jObject = new JSONObject(jsonData[0]);
+				jObject = new JSONObject(jsonData[0]);
 
 				/** Getting the parsed data as a List construct */
-//				places = placeJsonParser.parse(jObject);
+				// places = placeJsonParser.parse(jObject);
 
 			} catch (Exception e) {
 				Log.d("Exception", e.toString());
@@ -320,42 +321,39 @@ public class PlacesActivity extends FragmentActivity implements
 		protected void onPostExecute(List<HashMap<String, String>> list) {
 
 			// Clears all the existing markers
-	/*		mGoogleMap.clear();
-
-			for (int i = 0; i < list.size(); i++) {
-
-				// Creating a marker
-				MarkerOptions markerOptions = new MarkerOptions();
-
-				// Getting a place from the places list
-				HashMap<String, String> hmPlace = list.get(i);
-
-				// Getting latitude of the place
-				double lat = Double.parseDouble(hmPlace.get("lat"));
-
-				// Getting longitude of the place
-				double lng = Double.parseDouble(hmPlace.get("lng"));
-
-				// Getting name
-				String name = hmPlace.get("place_name");
-
-				// Getting vicinity
-				String vicinity = hmPlace.get("vicinity");
-
-				LatLng latLng = new LatLng(lat, lng);
-
-				// Setting the position for the marker
-				markerOptions.position(latLng);
-
-				// Setting the title for the marker.
-				// This will be displayed on taping the marker
-				markerOptions.title(name + " : " + vicinity);
-
-				// Placing a marker on the touched position
-				mGoogleMap.addMarker(markerOptions);
-			}
-		*/
-			}
+			/*
+			 * mGoogleMap.clear();
+			 * 
+			 * for (int i = 0; i < list.size(); i++) {
+			 * 
+			 * // Creating a marker MarkerOptions markerOptions = new
+			 * MarkerOptions();
+			 * 
+			 * // Getting a place from the places list HashMap<String, String>
+			 * hmPlace = list.get(i);
+			 * 
+			 * // Getting latitude of the place double lat =
+			 * Double.parseDouble(hmPlace.get("lat"));
+			 * 
+			 * // Getting longitude of the place double lng =
+			 * Double.parseDouble(hmPlace.get("lng"));
+			 * 
+			 * // Getting name String name = hmPlace.get("place_name");
+			 * 
+			 * // Getting vicinity String vicinity = hmPlace.get("vicinity");
+			 * 
+			 * LatLng latLng = new LatLng(lat, lng);
+			 * 
+			 * // Setting the position for the marker
+			 * markerOptions.position(latLng);
+			 * 
+			 * // Setting the title for the marker. // This will be displayed on
+			 * taping the marker markerOptions.title(name + " : " + vicinity);
+			 * 
+			 * // Placing a marker on the touched position
+			 * mGoogleMap.addMarker(markerOptions); }
+			 */
+		}
 	}
 
 	@Override
@@ -392,9 +390,13 @@ public class PlacesActivity extends FragmentActivity implements
 			setTextViewColor(Color.WHITE);
 			linearLayout.setBackgroundColor(Color.parseColor("#22FFFFFF"));
 			break;
-
+		case R.id.UserProfileEdit:
+			Intent intent1 = new Intent(this, UserProfile.class);
+			this.startActivity(intent1);
+			break;
 		default:
 			break;
+
 		}// Ends Switch
 
 		return super.onOptionsItemSelected(item);

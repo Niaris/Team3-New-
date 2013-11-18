@@ -57,6 +57,7 @@ public class Login extends Activity implements View.OnClickListener,
 				"http://schemas.google.com/BuyActivity").build();
 		mConnectionProgressDialog = new ProgressDialog(this);
 		mConnectionProgressDialog.setMessage("Signing in...");
+
 	}
 
 	@Override
@@ -152,6 +153,7 @@ public class Login extends Activity implements View.OnClickListener,
 	@Override
 	protected void onStart() {
 		super.onStart();
+
 	}
 
 	@Override
@@ -159,6 +161,7 @@ public class Login extends Activity implements View.OnClickListener,
 		super.onStop();
 		if (mPlusClient.isConnected()) {
 			mPlusClient.disconnect();
+
 		}
 
 	}
@@ -225,16 +228,16 @@ public class Login extends Activity implements View.OnClickListener,
 		}
 
 		protected void onPostExecute(String result) {
-			if (result.equals("success")) {
-				Intent intent = new Intent(getBaseContext(),
-						MainActivity.class);
+			if (result.equals("success")) {// MainActivity UserProfile
+				Intent intent = new Intent(getBaseContext(), UserProfile.class);
 				intent.putExtra("UserEmail", email);
+
+				intent.putExtra("UserName", name);
 
 				finish();
 				startActivity(intent);
 			}
 		}
-
 	}
 
 	private class GetUser extends AsyncTask<String, String, String> {

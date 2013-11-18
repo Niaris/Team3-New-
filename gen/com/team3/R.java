@@ -9,7 +9,7 @@ package com.team3;
 
 public final class R {
     public static final class array {
-        /** GOOGLE PLACES  
+        /** GOOGLE PLACES Introduced in FR 3 
          */
         public static final int place_type=0x7f090000;
         public static final int place_type_name=0x7f090001;
@@ -227,42 +227,57 @@ containing a value of this type.
         public static final int SaveReviewButton=0x7f05000e;
         public static final int TextView1=0x7f05002b;
         public static final int TextView2=0x7f05002e;
-        public static final int action_settings=0x7f050035;
+        public static final int UserProfileEdit=0x7f050051;
+        public static final int action_settings=0x7f050047;
         public static final int browseFileButton=0x7f050008;
+        public static final int btCancelEditDetails=0x7f05003c;
+        public static final int btSave=0x7f050039;
+        public static final int btnEditDetails=0x7f05003e;
         public static final int btn_find=0x7f050010;
         public static final int commentArea=0x7f05000d;
         public static final int dialogButtonOK=0x7f050030;
+        public static final int etAboutMe=0x7f050034;
+        public static final int etGooglePlus=0x7f050036;
+        public static final int etUserName=0x7f050032;
+        public static final int etWhatsApp=0x7f050038;
         public static final int gallery1=0x7f050025;
-        public static final int googlePlaces=0x7f05003c;
-        public static final int gotoCurrentLocation=0x7f05003b;
+        public static final int googlePlaces=0x7f05004e;
+        public static final int gotoCurrentLocation=0x7f05004d;
         public static final int hybrid=0x7f050004;
         public static final int imagePathArea=0x7f050007;
         public static final int imageView1=0x7f050009;
         public static final int locationAddress=0x7f050023;
         public static final int locationRating=0x7f050024;
         public static final int map=0x7f050011;
-        public static final int mapTypeHybrid=0x7f050039;
-        public static final int mapTypeNone=0x7f05003a;
-        public static final int mapTypeNormal=0x7f050036;
-        public static final int mapTypeSatellite=0x7f050037;
-        public static final int mapTypeTerrain=0x7f050038;
+        public static final int mapTypeHybrid=0x7f05004b;
+        public static final int mapTypeNone=0x7f05004c;
+        public static final int mapTypeNormal=0x7f050048;
+        public static final int mapTypeSatellite=0x7f050049;
+        public static final int mapTypeTerrain=0x7f05004a;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int proceed_button=0x7f05002a;
         public static final int ratingBar=0x7f05000b;
-        public static final int reviewComment=0x7f050033;
-        public static final int reviewDate=0x7f050032;
-        public static final int reviewRating=0x7f050034;
-        public static final int reviewUser=0x7f050031;
+        public static final int reviewComment=0x7f050045;
+        public static final int reviewDate=0x7f050044;
+        public static final int reviewRating=0x7f050046;
+        public static final int reviewUser=0x7f050043;
         public static final int reviewsList=0x7f050026;
         public static final int satellite=0x7f050002;
-        public static final int showAllSuggestions=0x7f05003d;
-        public static final int showNoSuggestions=0x7f05003e;
+        public static final int showAllSuggestions=0x7f05004f;
+        public static final int showNoSuggestions=0x7f050050;
         public static final int sign_in_button=0x7f050028;
         public static final int sign_out_button=0x7f050029;
         public static final int spr_place_type=0x7f05000f;
         public static final int terrain=0x7f050003;
         public static final int textView1=0x7f050027;
+        public static final int textView10=0x7f05003d;
+        public static final int tvAboutMe=0x7f050033;
+        public static final int tvEmailAddress=0x7f05003a;
+        public static final int tvGooglePlus=0x7f050035;
+        public static final int tvShowEmailAddress=0x7f05003b;
+        public static final int tvUserName=0x7f050031;
+        public static final int tvWhatsApp=0x7f050037;
         public static final int txAddress=0x7f050020;
         public static final int txLat=0x7f05001d;
         public static final int txLatitude=0x7f050013;
@@ -277,7 +292,11 @@ containing a value of this type.
         public static final int txtUniqueID=0x7f050018;
         public static final int txt_email=0x7f05002f;
         public static final int txt_name=0x7f05002d;
+        public static final int usergogoleplus=0x7f050041;
         public static final int userimage=0x7f05002c;
+        public static final int userinterest=0x7f050040;
+        public static final int username=0x7f05003f;
+        public static final int userwhatsapp=0x7f050042;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -290,7 +309,10 @@ containing a value of this type.
         public static final int activity_reviews=0x7f030004;
         public static final int activity_sign_in=0x7f030005;
         public static final int activity_user_details=0x7f030006;
-        public static final int review_item=0x7f030007;
+        public static final int activity_user_profile=0x7f030007;
+        public static final int activity_user_profile_details=0x7f030008;
+        public static final int list_item=0x7f030009;
+        public static final int review_item=0x7f03000a;
     }
     public static final class menu {
         public static final int check_in=0x7f0b0000;
@@ -298,9 +320,14 @@ containing a value of this type.
         public static final int reviews=0x7f0b0002;
     }
     public static final class string {
+        public static final int about_me=0x7f060032;
+        public static final int about_me_hint=0x7f060033;
         public static final int action_settings=0x7f06001b;
+        public static final int activity_user_profile=0x7f060039;
         public static final int add_comment_text=0x7f060028;
         public static final int add_picture_text=0x7f060025;
+        /**  Intorduced in FR 1 Andreas Stavrou, Ellis Carvalho 
+         */
         public static final int app_name=0x7f06001a;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
@@ -326,6 +353,9 @@ containing a value of this type.
          */
         public static final int auth_client_using_bad_version_title=0x7f060014;
         public static final int browse_picture_button=0x7f060026;
+        public static final int btn_cancel_edit_details=0x7f06003c;
+        public static final int button_edit_details=0x7f06003b;
+        public static final int button_save_user_profile=0x7f060038;
         public static final int checkin_button=0x7f06002a;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
@@ -399,6 +429,8 @@ containing a value of this type.
          */
         public static final int common_signin_button_text_long=0x7f060013;
         public static final int current_location=0x7f060022;
+        public static final int google_plus_account=0x7f060034;
+        public static final int google_plus_account_hint=0x7f060035;
         public static final int hello_world=0x7f06001c;
         public static final int hybrid=0x7f06001f;
         public static final int main_activity=0x7f06002c;
@@ -414,6 +446,13 @@ containing a value of this type.
         public static final int title_activity_places=0x7f06002d;
         public static final int title_activity_reviews=0x7f060024;
         public static final int title_user_login=0x7f06002b;
+        /**  Intoduced in FR 4 
+         */
+        public static final int user_name=0x7f060030;
+        public static final int user_name_hint=0x7f060031;
+        public static final int whats_app_account=0x7f060036;
+        public static final int whats_app_account_hint=0x7f060037;
+        public static final int your_email=0x7f06003a;
     }
     public static final class style {
         /** 
