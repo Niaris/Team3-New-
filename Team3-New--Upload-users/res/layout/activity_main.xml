@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+        <Spinner
+        android:id="@+id/spr_place_type"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true" />
+ 
+    <Button
+        android:id="@+id/btn_find"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/spr_place_type"
+        android:text="@string/str_btn_find" />
+ 
+    <fragment 
+        android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spr_place_type"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+    
+    <LinearLayout
+	     android:id="@+id/LinearLayout3"
+	     android:layout_width="match_parent"
+	     android:layout_height="wrap_content"
+	     android:layout_below="@id/spr_place_type"
+	     android:orientation="vertical">
+    
+
+		
+    	     
+	         <TextView
+	         android:id="@+id/txLatitude"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content" />
+	         
+	         <TextView
+	         android:id="@+id/txLongitude"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content" />
+	       
+	       <TextView
+	         android:id="@+id/txtTime"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content" />
+	       
+	         
+	     <TextView
+	         android:id="@+id/txtAddress"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content" />
+	       
+	     <TextView
+	         android:id="@+id/txtSavedConfirm"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content" />
+
+	     <TextView
+	         android:id="@+id/txtUniqueID"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content" />
+	     
+    	 </LinearLayout>
+
+</RelativeLayout>
