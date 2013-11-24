@@ -19,10 +19,9 @@ public class UserBusiness {
 		DBConnection.RegisterUser(email, name);
 	}
 
-	public void AddUserProfile(String name, String interest, String googleplus,
-			String whatsapp, String email) {
-		DBConnection
-				.AddUserProfile(name, interest, googleplus, whatsapp, email);
+	public void AddUserProfile(String name, String interest, String UserId,
+			String email) {
+		DBConnection.AddUserProfile(name, interest, email, UserId);
 	}
 
 	public void GetUserProfile(String email) {

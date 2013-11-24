@@ -36,7 +36,7 @@ public class UserProfileDetails extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile_details);
 		tvEmail = (TextView) findViewById(R.id.textView10);
-		tvEmail.setText(getIntent().getExtras().getString("email"));
+		tvEmail.setText(getIntent().getExtras().getString("useremail"));
 		tvEmail = (TextView) findViewById(R.id.textView10);
 
 		dbConnection = new MySQLConnection();

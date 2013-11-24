@@ -24,16 +24,16 @@ import com.team3.dataaccess.MySQLConnection;
 public class UserProfile extends Activity implements View.OnClickListener {
 
 	private static final String TAG = "AddUser";
-	public String email;
+	public String UserId;
+	public String useremail;
 	public String name;
 	public String interest;
 	public String googleplus;
 	public String whatsapp;
 	public TextView TVemail;
+	public TextView TVUserId;
 	public EditText ETname;
 	public EditText ETinterest;
-	public EditText ETgoogleplus;
-	public EditText ETwhatsapp;
 	private UserBusiness userBUS;
 
 	@Override
@@ -59,7 +59,7 @@ public class UserProfile extends Activity implements View.OnClickListener {
 		protected String doInBackground(String... params) {
 			try {
 				userBUS.AddUserProfile(params[0], params[1], params[2],
-						params[3], params[4]);
+						params[3]);
 				return "success";
 
 			} catch (Exception e) {
@@ -91,15 +91,13 @@ public class UserProfile extends Activity implements View.OnClickListener {
 
 			ETname = (EditText) findViewById(R.id.etUserName);
 			ETinterest = (EditText) findViewById(R.id.etAboutMe);
-			ETgoogleplus = (EditText) findViewById(R.id.etGooglePlus);
-			ETwhatsapp = (EditText) findViewById(R.id.etWhatsApp);
 			TVemail = (TextView) findViewById(R.id.tvShowEmailAddress);
+			TVUserId = (TextView) findViewById(R.id.tvUserID);
 
 			name = ETname.getText().toString();
 			interest = ETinterest.getText().toString();
-			googleplus = ETgoogleplus.getText().toString();
-			whatsapp = ETwhatsapp.getText().toString();
-			email = TVemail.getText().toString();
+			useremail = TVemail.getText().toString();
+			UserId = TVUserId.getText().toString();
 
 			if (ETname.getText().toString().isEmpty()) {
 				try {
@@ -113,12 +111,11 @@ public class UserProfile extends Activity implements View.OnClickListener {
 						Toast.LENGTH_LONG).show();
 			} else {
 
-				new AddUserProfile().execute(name, interest, googleplus,
-						whatsapp, email);
+				new AddUserProfile().execute(name, interest, useremail, UserId);
 				Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(getBaseContext(),
 						UserProfileDetails.class);
-				intent.putExtra("email", email);
+				intent.putExtra("useremail", useremail);
 
 				finish();
 				startActivity(intent);

@@ -29,7 +29,7 @@ public class MySQLConnection {
 	private static String SERVER_URL = "http://54.246.220.68/";
 	private static String ADD_USER_PHP = "AddUsers.php";
 	private static String GET_USER_ID_PHP = "GetUser.php";
-	private static String ADD_OR_UPDATE_USER_PROFILE_PHP = "AddandUpdateUserProfile.php";
+	private static String ADD_OR_UPDATE_USER_PROFILE_PHP = "AddandUpdateUserProfileTEST.php";
 	private static String GET_USER_PROFILE_DETAILS_PHP = "GetUserProfileTEST.php";
 
 	public static final String TAG_USER_NAME = "User_Name";
@@ -100,14 +100,13 @@ public class MySQLConnection {
 
 	}
 
-	public void AddUserProfile(String name, String interest, String googleplus,
-			String whatsapp, String email) {
+	public void AddUserProfile(String name, String interest, String UserId,
+			String useremail) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("name", name));
 		params.add(new BasicNameValuePair("interest", interest));
-		params.add(new BasicNameValuePair("googleplus", googleplus));
-		params.add(new BasicNameValuePair("whatsapp", whatsapp));
-		params.add(new BasicNameValuePair("useremail", email));
+		params.add(new BasicNameValuePair("useremail", useremail));
+		params.add(new BasicNameValuePair("UserId", UserId));
 
 		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
 				+ ADD_OR_UPDATE_USER_PROFILE_PHP, "POST", params);
@@ -117,11 +116,11 @@ public class MySQLConnection {
 		try {
 			int success = json.getInt("success");
 			String message = json.getString("message");
-			Log.d("USER", message);
+			Log.d("USER PROFILE POST", message);
 			if (success == 1) {
 				Log.d("USER PROFILE", "Details POST");
-			} else {
-
+			} else if (success == 0) {
+				Log.d("USER PROFILE EXISTS", "Details POST");
 			}
 		} catch (JSONException e) {
 			Log.e("USER PROFILE", e.getMessage());
@@ -174,7 +173,7 @@ public class MySQLConnection {
 
 			}
 		} catch (JSONException e) {
-			Log.e("USER PROFILE DETAILS GET", e.getMessage());
+			Log.e("USER PROFILE DETAILS GET Exception", e.getMessage());
 			e.printStackTrace();
 		}
 	}// Ends GetUserProfile
