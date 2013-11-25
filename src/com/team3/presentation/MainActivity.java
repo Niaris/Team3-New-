@@ -431,7 +431,6 @@ public class MainActivity extends FragmentActivity implements
 		super.onStop();
 		MapStateManager mgr = new MapStateManager(this);
 		mgr.saveMapState(Team3Map);
-		DBConnection.close();
 	}// End onStop
 
 	/**

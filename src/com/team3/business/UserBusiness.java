@@ -19,7 +19,7 @@ public class UserBusiness {
 		DBConnection.RegisterUser(email, name);
 	}
 
-	public void GetUser(String email) {
+	public void getUser(String email) {
 		DBConnection.GetUser(email);
 	}
 

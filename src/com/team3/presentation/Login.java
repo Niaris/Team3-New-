@@ -242,7 +242,7 @@ public class Login extends Activity implements View.OnClickListener,
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				userBUS.GetUser(params[1]);
+				userBUS.getUser(params[1]);
 				return "success";
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

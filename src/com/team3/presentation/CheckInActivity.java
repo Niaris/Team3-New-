@@ -42,7 +42,6 @@ public class CheckInActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DBConnection = new MySQLConnection();
-		DBConnection.open();
 		ReviewBUS = new ReviewBusiness(DBConnection);
 
 		setContentView(R.layout.activity_check_in);

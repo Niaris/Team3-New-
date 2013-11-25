@@ -157,6 +157,8 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f01000f;
     }
     public static final class color {
+        public static final int appBlueBackground=0x7f04000b;
+        public static final int appBlueText=0x7f04000a;
         public static final int common_action_bar_splitter=0x7f040009;
         /**  Sign-in Button Colors 
          */
@@ -169,8 +171,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f040006;
         public static final int common_signin_btn_light_text_focused=0x7f040007;
         public static final int common_signin_btn_light_text_pressed=0x7f040005;
-        public static final int common_signin_btn_text_dark=0x7f04000a;
-        public static final int common_signin_btn_text_light=0x7f04000b;
+        public static final int common_signin_btn_text_dark=0x7f04000c;
+        public static final int common_signin_btn_text_light=0x7f04000d;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -225,44 +227,47 @@ containing a value of this type.
         public static final int RateLocationTV=0x7f05000a;
         public static final int RelativeLayout1=0x7f050019;
         public static final int SaveReviewButton=0x7f05000e;
-        public static final int TextView1=0x7f05002b;
-        public static final int TextView2=0x7f05002e;
-        public static final int action_settings=0x7f050035;
+        public static final int TextView1=0x7f05002d;
+        public static final int TextView2=0x7f050030;
+        public static final int action_settings=0x7f050038;
         public static final int browseFileButton=0x7f050008;
         public static final int btn_find=0x7f050010;
         public static final int commentArea=0x7f05000d;
-        public static final int dialogButtonOK=0x7f050030;
-        public static final int gallery1=0x7f050025;
-        public static final int googlePlaces=0x7f05003c;
-        public static final int gotoCurrentLocation=0x7f05003b;
+        public static final int dialogButtonOK=0x7f050032;
+        public static final int gallery1=0x7f050027;
+        public static final int googlePlaces=0x7f05003f;
+        public static final int gotoCurrentLocation=0x7f05003e;
         public static final int hybrid=0x7f050004;
         public static final int imagePathArea=0x7f050007;
         public static final int imageView1=0x7f050009;
-        public static final int locationAddress=0x7f050023;
+        public static final int locationAddress=0x7f050026;
+        public static final int locationName=0x7f050023;
         public static final int locationRating=0x7f050024;
         public static final int map=0x7f050011;
-        public static final int mapTypeHybrid=0x7f050039;
-        public static final int mapTypeNone=0x7f05003a;
-        public static final int mapTypeNormal=0x7f050036;
-        public static final int mapTypeSatellite=0x7f050037;
-        public static final int mapTypeTerrain=0x7f050038;
+        public static final int mapTypeHybrid=0x7f05003c;
+        public static final int mapTypeNone=0x7f05003d;
+        public static final int mapTypeNormal=0x7f050039;
+        public static final int mapTypeSatellite=0x7f05003a;
+        public static final int mapTypeTerrain=0x7f05003b;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int proceed_button=0x7f05002a;
+        public static final int numberOfReviews=0x7f050025;
+        public static final int onText=0x7f050034;
+        public static final int proceed_button=0x7f05002c;
         public static final int ratingBar=0x7f05000b;
-        public static final int reviewComment=0x7f050033;
-        public static final int reviewDate=0x7f050032;
-        public static final int reviewRating=0x7f050034;
-        public static final int reviewUser=0x7f050031;
-        public static final int reviewsList=0x7f050026;
+        public static final int reviewComment=0x7f050037;
+        public static final int reviewDate=0x7f050035;
+        public static final int reviewRating=0x7f050036;
+        public static final int reviewUser=0x7f050033;
+        public static final int reviewsList=0x7f050028;
         public static final int satellite=0x7f050002;
-        public static final int showAllSuggestions=0x7f05003d;
-        public static final int showNoSuggestions=0x7f05003e;
-        public static final int sign_in_button=0x7f050028;
-        public static final int sign_out_button=0x7f050029;
+        public static final int showAllSuggestions=0x7f050040;
+        public static final int showNoSuggestions=0x7f050041;
+        public static final int sign_in_button=0x7f05002a;
+        public static final int sign_out_button=0x7f05002b;
         public static final int spr_place_type=0x7f05000f;
         public static final int terrain=0x7f050003;
-        public static final int textView1=0x7f050027;
+        public static final int textView1=0x7f050029;
         public static final int txAddress=0x7f050020;
         public static final int txLat=0x7f05001d;
         public static final int txLatitude=0x7f050013;
@@ -275,9 +280,9 @@ containing a value of this type.
         public static final int txtSavedConfirm=0x7f050017;
         public static final int txtTime=0x7f050015;
         public static final int txtUniqueID=0x7f050018;
-        public static final int txt_email=0x7f05002f;
-        public static final int txt_name=0x7f05002d;
-        public static final int userimage=0x7f05002c;
+        public static final int txt_email=0x7f050031;
+        public static final int txt_name=0x7f05002f;
+        public static final int userimage=0x7f05002e;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
