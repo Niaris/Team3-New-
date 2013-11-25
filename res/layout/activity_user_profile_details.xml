@@ -6,12 +6,12 @@
     
     
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/UserId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="39dp"
-        android:text="" />
+        android:text="174" />
 
    
 
@@ -19,18 +19,18 @@
         android:id="@+id/btnEditDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView10"
+        android:layout_alignTop="@+id/UserId"
         android:layout_centerHorizontal="true"
         android:text="@string/button_edit_details" 
         />
 
     
-
+<!-- @android:id/list -->
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView10"
+        android:layout_below="@+id/UserId"
         android:layout_marginTop="60dp" >
 
     </ListView>

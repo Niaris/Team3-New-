@@ -1,121 +1,230 @@
+/**
+ * @author Andreas Stavrou
+ */
+
 package com.team3.presentation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import android.app.ListActivity;
-import android.app.ProgressDialog;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team3.R;
-import com.team3.business.UserBusiness;
-import com.team3.dataaccess.MySQLConnection;
 
-public class UserProfileDetails extends ListActivity implements
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UserProfileDetails.
+ */
+public class UserProfileDetails extends Activity implements
 		View.OnClickListener {
 
-	private UserBusiness userBUS;
-	// Progress Dialog
-	private ProgressDialog pDialog;
+	/** The json result. */
+	private String jsonResult;
 
-	private TextView tvEmail;
-	public String emailstring;
-	private Button btEditDetails;
-	private MySQLConnection dbConnection;
+	/** The list view. */
+	private ListView listView;
 
+	/** The s user id. */
+	public String sUserId;
+
+	/** The Tvuser id. */
+	public TextView TvuserId;
+
+	/*
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile_details);
-		tvEmail = (TextView) findViewById(R.id.textView10);
-		tvEmail.setText(getIntent().getExtras().getString("useremail"));
-		tvEmail = (TextView) findViewById(R.id.textView10);
-
-		dbConnection = new MySQLConnection();
-		userBUS = new UserBusiness(dbConnection);
-
-		emailstring = tvEmail.getText().toString();
-
-		new GetUserProfileDetails().execute(emailstring);
+		listView = (ListView) findViewById(R.id.listView1);
+		accessWebService();
 
 		findViewById(R.id.btnEditDetails).setOnClickListener(this);
-
-		dbConnection
-				.setUserProfileList(new ArrayList<HashMap<String, String>>());
-
 	}
 
-	private class GetUserProfileDetails extends
-			AsyncTask<String, String, String> {
+	/*
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
 
-		/**
-		 * Before starting background thread Show Progress Dialog
-		 * */
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			pDialog = new ProgressDialog(UserProfileDetails.this);
-			pDialog.setMessage("Loading user details. Please wait...");
-			pDialog.setIndeterminate(false);
-			pDialog.setCancelable(true);
-			pDialog.show();
-		}
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 
+	// Async Task to access the web
+	/**
+	 * The Class JsonReadTask.
+	 */
+	private class JsonReadTask extends AsyncTask<String, Void, String> {
+
+		/*
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
 		@Override
 		protected String doInBackground(String... params) {
-
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(params[0]);
 			try {
-				userBUS.GetUserProfile(params[0]);
-				return "success";
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				// / Log.d(TAG, "Error" + e);
-
-				return "Error";
+				HttpResponse response = httpclient.execute(httppost);
+				jsonResult = inputStreamToString(
+						response.getEntity().getContent()).toString();
 			}
+
+			catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
 
 		/**
-		 * After completing background task Dismiss the progress dialog
-		 * **/
-		protected void onPostExecute(String file_url) {
-			// dismiss the dialog once got all details
-			pDialog.dismiss();
-			runOnUiThread(new Runnable() {
-				public void run() {
-					/**
-					 * Updating parsed JSON data into ListView
-					 * */
-					ListAdapter adapter = new SimpleAdapter(
-							UserProfileDetails.this,
-							dbConnection.getUserProfileList(),
-							R.layout.list_item, new String[] {
-									MySQLConnection.TAG_USER_NAME,
-									MySQLConnection.TAG_USER_INTERESTS,
-									MySQLConnection.TAG_USER_GOOGLE_ACCOUNT,
-									MySQLConnection.TAG_USER_WHATSAPP_ACOUNT },
-							new int[] { R.id.username, R.id.userinterest,
-									R.id.usergogoleplus, R.id.userwhatsapp });
-					// updating listview
-					setListAdapter(adapter);
+		 * Input stream to string.
+		 * 
+		 * @param inStream
+		 *            the in stream
+		 * @return the string builder
+		 */
+		private StringBuilder inputStreamToString(InputStream inStream) {
+			String rLine = "";
+			StringBuilder strngBuilder = new StringBuilder();
+			BufferedReader bfrReader = new BufferedReader(
+					new InputStreamReader(inStream));
+
+			try {
+				while ((rLine = bfrReader.readLine()) != null) {
+					strngBuilder.append(rLine);
 				}
-			});
+			}
+
+			catch (IOException e) {
+				// e.printStackTrace();
+				Toast.makeText(getApplicationContext(),
+						"Error..." + e.toString(), Toast.LENGTH_LONG).show();
+			}
+			return strngBuilder;
 		}
+
+		/*
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(String result) {
+			ListDrwaer();
+		}
+	}// end async task
+
+	/**
+	 * Access web service.
+	 */
+	public void accessWebService() {
+
+		TvuserId = (TextView) findViewById(R.id.UserId);
+		sUserId = TvuserId.getText().toString();
+
+		JsonReadTask task = new JsonReadTask();
+
+		task.execute(new String[] { "http://54.246.220.68/GetAllUserProfiles.php"
+				+ "?UserId=" + sUserId });
 	}
 
+	/**
+	 * List drwaer. builds hash set for the list view
+	 */
+	public void ListDrwaer() {
+		List<Map<String, String>> userProfileList = new ArrayList<Map<String, String>>();
+
+		try {
+			JSONObject jsonResponse = new JSONObject(jsonResult);
+			JSONArray jsonMainNode = jsonResponse.optJSONArray("userprofiles");
+
+			for (int i = 0; i < jsonMainNode.length(); i++) {
+				JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+				String name = jsonChildNode.optString("User_Name");
+				String interests = jsonChildNode.optString("User_Interests");
+				String googleplus = jsonChildNode
+						.optString("User_Google_Account");
+
+				String outPut = "User Name: " + name + "\n" + "\n"
+						+ "Interests: " + interests + "\n" + "\n" + "Google+: "
+						+ googleplus;
+				userProfileList.add(createUserProfile("users", outPut));
+			}
+		} catch (JSONException e) {
+			Toast.makeText(getApplicationContext(), "Error" + e.toString(),
+					Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+
+		}
+
+		SimpleAdapter simpleAdapter = new SimpleAdapter(this, userProfileList,
+				android.R.layout.simple_list_item_1, new String[] { "users" },
+				new int[] { android.R.id.text1 });
+		listView.setAdapter(simpleAdapter);
+	}
+
+	/**
+	 * Creates the User Profile.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param interests
+	 *            the interests
+	 * @return the hash map
+	 */
+	private HashMap<String, String> createUserProfile(String name,
+			String interests) {
+		HashMap<String, String> usersUnqProfile = new HashMap<String, String>();
+		usersUnqProfile.put(name, interests);
+		return usersUnqProfile;
+	}
+
+	/*
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		if (v.getId() == R.id.btnEditDetails) {
 			Intent intent = new Intent(getBaseContext(), UserProfile.class);
 			finish();

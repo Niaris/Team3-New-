@@ -92,6 +92,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvEmailAddress"
         android:layout_below="@+id/etAboutMe"
-        android:text="331" />
+        android:text="174" />
 
 </RelativeLayout>

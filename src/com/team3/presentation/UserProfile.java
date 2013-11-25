@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.team3.R;
 import com.team3.business.UserBusiness;
 import com.team3.dataaccess.MySQLConnection;
+import com.team3.presentation.UserProfileDetails;
 
 /**
  * The Class UserProfile.
@@ -113,12 +114,14 @@ public class UserProfile extends Activity implements View.OnClickListener {
 
 				new AddUserProfile().execute(name, interest, useremail, UserId);
 				Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
+
 				Intent intent = new Intent(getBaseContext(),
 						UserProfileDetails.class);
 				intent.putExtra("useremail", useremail);
 
 				finish();
 				startActivity(intent);
+
 			}
 
 		} else if (v.getId() == R.id.btCancelEditDetails) {
