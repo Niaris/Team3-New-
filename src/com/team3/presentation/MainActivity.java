@@ -35,17 +35,11 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings.Secure;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -335,6 +329,10 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.showAllSuggestions:
 			showSuggestedPlaces("ALL");
 			break;
+		case R.id.UserProfileEdit:
+			Intent intent1 = new Intent(this, UserProfile.class);
+			this.startActivity(intent1);
+			break;
 		case R.id.showNoSuggestions:
 			showSuggestedPlaces("NONE");
 			break;
@@ -386,8 +384,8 @@ public class MainActivity extends FragmentActivity implements
 											"Press this window to check-in here")
 									.icon(BitmapDescriptorFactory
 											.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-					markerSuggestionMap.put(newMarker, new LocationVO(vicinity, lat,
-							lng, name));
+					markerSuggestionMap.put(newMarker, new LocationVO(vicinity,
+							lat, lng, name));
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -666,9 +664,9 @@ public class MainActivity extends FragmentActivity implements
 
 	public void checkIn(View view) {
 		LocationVO loc = getClosestRegisteredPlace();
-		if (loc == null){
+		if (loc == null) {
 			loc = CurrentLocation;
-		}	
+		}
 		gotoCheckInActivity(loc);
 	}
 

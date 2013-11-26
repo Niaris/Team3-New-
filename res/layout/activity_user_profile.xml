@@ -73,7 +73,7 @@
         android:layout_alignBottom="@+id/tvEmailAddress"
         android:layout_alignLeft="@+id/btSave"
         android:layout_marginLeft="24dp"
-        android:text="msolomonidou12@googlemail.com" 
+        android:text="" 
          />
 
     <Button

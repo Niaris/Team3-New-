@@ -100,7 +100,7 @@ public class MySQLConnection {
 
 	}
 
-	public void AddUserProfile(String name, String interest, String UserId,
+	public int AddUserProfile(String name, String interest, String UserId,
 			String useremail) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("name", name));
@@ -112,9 +112,9 @@ public class MySQLConnection {
 				+ ADD_OR_UPDATE_USER_PROFILE_PHP, "POST", params);
 
 		Log.d("Create Response", json.toString());
-
+		int success = 0;
 		try {
-			int success = json.getInt("success");
+			success = json.getInt("success");
 			String message = json.getString("message");
 			Log.d("USER PROFILE POST", message);
 			if (success == 1) {
@@ -126,6 +126,7 @@ public class MySQLConnection {
 			Log.e("USER PROFILE", e.getMessage());
 
 		}
+		return success;
 	}// Ends AddUserProfile
 
 	public void GetUserProfile(String email) {
@@ -178,7 +179,7 @@ public class MySQLConnection {
 		}
 	}// Ends GetUserProfile
 
-	public void RegisterUser(String email, String name) {
+	public int RegisterUser(String email, String name) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("name", name));
 		params.add(new BasicNameValuePair("emailAddress", email));
@@ -187,9 +188,9 @@ public class MySQLConnection {
 				"POST", params);
 
 		Log.d("Create Response", json.toString());
-
+		int success = 0;
 		try {
-			int success = json.getInt("success");
+			success = json.getInt("success");
 			String message = json.getString("message");
 			Log.d("USER", message);
 			if (success == 1) {
@@ -200,6 +201,7 @@ public class MySQLConnection {
 		} catch (JSONException e) {
 			Log.e("USER", e.getMessage());
 		}
+		return success;
 	}// Ends RegisterUser
 
 	public void GetUser(String email) {
