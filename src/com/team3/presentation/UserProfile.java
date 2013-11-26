@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.team3.R;
 import com.team3.business.UserBusiness;
 import com.team3.dataaccess.MySQLConnection;
-import com.team3.presentation.UserProfileDetails;
 
 /**
  * The Class UserProfile.
@@ -36,16 +35,15 @@ public class UserProfile extends Activity implements View.OnClickListener {
 	public EditText ETname;
 	public EditText ETinterest;
 	private UserBusiness userBUS;
+	int success;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile);
-		/*
-		 * Intent intent = getIntent(); String stringRecd =
-		 * intent.getStringExtra("UserEmail"); TVemail.setText(stringRecd);
-		 */
+
+		getIntentDetails();
 
 		MySQLConnection dbConnection = new MySQLConnection();
 		userBUS = new UserBusiness(dbConnection);
@@ -54,13 +52,22 @@ public class UserProfile extends Activity implements View.OnClickListener {
 		findViewById(R.id.btCancelEditDetails).setOnClickListener(this);
 	}
 
+	private void getIntentDetails() {
+		TVemail = (TextView) findViewById(R.id.tvShowEmailAddress);
+
+		Intent intent = getIntent();
+		String userEmail = intent.getStringExtra("UserEmail");
+		TVemail.setText(userEmail);
+
+	}
+
 	private class AddUserProfile extends AsyncTask<String, String, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				userBUS.AddUserProfile(params[0], params[1], params[2],
-						params[3]);
+				success = userBUS.AddUserProfile(params[0], params[1],
+						params[2], params[3]);
 				return "success";
 
 			} catch (Exception e) {
@@ -74,13 +81,21 @@ public class UserProfile extends Activity implements View.OnClickListener {
 
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
-				/*
-				 * Intent intent = new Intent(getBaseContext(),
-				 * MainActivity.class); intent.putExtra("UserEmail", email);
-				 * intent.putExtra("UserName", name);
-				 * 
-				 * finish(); startActivity(intent);
-				 */
+				if (success == 0) {
+					Toast.makeText(getBaseContext(),
+							"User Name already exists.", Toast.LENGTH_LONG)
+							.show();
+
+				} else {
+					Toast.makeText(getBaseContext(), "Saved!",
+							Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(getBaseContext(),
+							UserProfileDetails.class);
+					intent.putExtra("useremail", useremail);
+
+					finish();
+					startActivity(intent);
+				}
 			}
 		}
 	}
@@ -113,14 +128,6 @@ public class UserProfile extends Activity implements View.OnClickListener {
 			} else {
 
 				new AddUserProfile().execute(name, interest, useremail, UserId);
-				Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
-
-				Intent intent = new Intent(getBaseContext(),
-						UserProfileDetails.class);
-				intent.putExtra("useremail", useremail);
-
-				finish();
-				startActivity(intent);
 
 			}
 

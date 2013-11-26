@@ -15,13 +15,13 @@ public class UserBusiness {
 
 	}
 
-	public void RegisterUser(String email, String name) {
-		DBConnection.RegisterUser(email, name);
+	public int RegisterUser(String email, String name) {
+		return DBConnection.RegisterUser(email, name);
 	}
 
-	public void AddUserProfile(String name, String interest, String UserId,
+	public int AddUserProfile(String name, String interest, String UserId,
 			String email) {
-		DBConnection.AddUserProfile(name, interest, email, UserId);
+		return DBConnection.AddUserProfile(name, interest, email, UserId);
 	}
 
 	public void GetUserProfile(String email) {

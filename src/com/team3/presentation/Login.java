@@ -40,6 +40,7 @@ public class Login extends Activity implements View.OnClickListener,
 	public String email;
 	public String name;
 	private UserBusiness userBUS;
+	int success;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,7 @@ public class Login extends Activity implements View.OnClickListener,
 
 				new RegisterUserTask().execute(email, name);
 				// new GetUser().execute(email);
+
 			}
 		});
 
@@ -216,7 +218,7 @@ public class Login extends Activity implements View.OnClickListener,
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				userBUS.RegisterUser(params[0], params[1]);
+				success = userBUS.RegisterUser(params[0], params[1]);
 				return "success";
 
 			} catch (Exception e) {
@@ -228,11 +230,20 @@ public class Login extends Activity implements View.OnClickListener,
 		}
 
 		protected void onPostExecute(String result) {
-			if (result.equals("success")) {// MainActivity UserProfile
+
+			if (success == 1) {
 				Intent intent = new Intent(getBaseContext(), UserProfile.class);
 				intent.putExtra("UserEmail", email);
 
-				intent.putExtra("UserName", name);
+				// intent.putExtra("UserName", name);
+
+				finish();
+				startActivity(intent);
+			} else {
+				Intent intent = new Intent(getBaseContext(), MainActivity.class);
+				intent.putExtra("UserEmail", email);
+
+				// intent.putExtra("UserName", name);
 
 				finish();
 				startActivity(intent);
