@@ -2,18 +2,22 @@ package com.team3.entities;
 
 import java.io.Serializable;
 
+import android.location.Location;
+
 public class LocationVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int ID;
-	private String Address;
 	private double Latitude;
 	private double Longitude;
+	private String Address;
+	private String Name;
 	
-	public LocationVO(String address, double latitude, double longitude) {
+	public LocationVO(String address, double latitude, double longitude, String name) {
 		this.Address = address;
 		this.Latitude = latitude;
 		this.Longitude = longitude;
+		this.Name = name;
 	}
 	
 	public int getID() {
@@ -40,7 +44,11 @@ public class LocationVO implements Serializable {
 	public void setLongitude(double longitude) {
 		Longitude = longitude;
 	}
-	
-	
+	public String getName() {
+		return Name;
+	}
+	public void setName(String name) {
+		Name = name;
+	}
 	
 }

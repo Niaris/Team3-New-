@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,198 +23,244 @@ import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.plus.model.people.PersonBuffer;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.team3.R;
-
+import com.team3.business.UserBusiness;
+import com.team3.dataaccess.MySQLConnection;
 
 public class Login extends Activity implements View.OnClickListener,
-ConnectionCallbacks, OnConnectionFailedListener, PlusClient.OnPeopleLoadedListener {
-	
-private static final String TAG = "Login";
-private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+		ConnectionCallbacks, OnConnectionFailedListener,
+		PlusClient.OnPeopleLoadedListener {
 
-private ProgressDialog mConnectionProgressDialog;
-private PlusClient mPlusClient;
-private ConnectionResult mConnectionResult;
+	private static final String TAG = "Login";
+	private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+	private ProgressDialog mConnectionProgressDialog;
+	private PlusClient mPlusClient;
+	private ConnectionResult mConnectionResult;
+	public TextView nameTV;
+	public TextView emailTV;
+	public String email;
+	public String name;
+	private UserBusiness userBUS;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_sign_in);
 
+		MySQLConnection dbConnection = new MySQLConnection();
+		userBUS = new UserBusiness(dbConnection);
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_sign_in);
-    findViewById(R.id.sign_in_button).setOnClickListener(this);
-    findViewById(R.id.sign_out_button).setOnClickListener(this);
-    findViewById(R.id.proceed_button).setOnClickListener(this);
-    
-    mPlusClient = new PlusClient.Builder(this, this, this)
-            .setActions("http://schemas.google.com/AddActivity", "http://schemas.google.com/BuyActivity")
-            .build();
-    // Progress bar to be displayed if the connection failure is not resolved.
-    mConnectionProgressDialog = new ProgressDialog(this);
-    mConnectionProgressDialog.setMessage("Signing in...");
-    
-}
+		findViewById(R.id.sign_in_button).setOnClickListener(this);
+		findViewById(R.id.sign_out_button).setOnClickListener(this);
 
-      
-@Override
-public void onClick(View view) {
-	
-    if (view.getId() == R.id.sign_in_button && !mPlusClient.isConnected()) {
-        if (mConnectionResult == null) {
-            mPlusClient.connect();
-            mConnectionProgressDialog.show();
-        } else {
-            try {
-                mConnectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
-            } catch (SendIntentException e) {
-                // Try connecting again.
-                mConnectionResult = null;
-                mPlusClient.connect();
-            }
-        }
-    }
-    if (view.getId() == R.id.sign_out_button ) {
-    	Log.d(TAG,"sign out pressed");
-        if (mPlusClient.isConnected()) {
-            mPlusClient.clearDefaultAccount();
-            mPlusClient.disconnect();
-            Toast.makeText(this, "You are disconnected!" , Toast.LENGTH_LONG).show();
-            
-            Log.d(TAG, "disconnected="+!mPlusClient.isConnected());	
-        }
-    }
-    
-   if (view.getId() == R.id.proceed_button){
-    Intent i=new Intent(
-            Login.this,
-            MainActivity.class);
-     startActivity(i);
-   }
-}
+		mPlusClient = new PlusClient.Builder(this, this, this).setActions(
+				"http://schemas.google.com/AddActivity",
+				"http://schemas.google.com/BuyActivity").build();
+		mConnectionProgressDialog = new ProgressDialog(this);
+		mConnectionProgressDialog.setMessage("Signing in...");
 
-/**
- * Creates a dialog with user details after sign in
- * @param personPhoto user photo url
- * @param personName user name
- * @param accountEmail user email 
- * 
- */
+	}
 
-private void createUserDialog(String accountEmail, String personName, String personPhoto) {
-	// custom dialog
-				final Dialog dialog = new Dialog(Login.this);
-				dialog.setContentView(R.layout.activity_user_details);
-				dialog.setTitle("User Details");
-	 
-				// set the custom dialog components - text, image and button
-				TextView email = (TextView) dialog.findViewById(R.id.txt_email);
-				email.setText(accountEmail);
-				TextView name = (TextView) dialog.findViewById(R.id.txt_name);
-				name.setText(personName);
-				
-				
-				ImageView photo = (ImageView) dialog.findViewById(R.id.userimage);
-				UrlImageViewHelper.setUrlDrawable(photo, personPhoto);
+	@Override
+	public void onClick(View view) {
+		if (view.getId() == R.id.sign_in_button && !mPlusClient.isConnected()) {
+			if (mConnectionResult == null) {
+				mPlusClient.connect();
+				mConnectionProgressDialog.show();
+			} else {
+				try {
+					mConnectionResult.startResolutionForResult(this,
+							REQUEST_CODE_RESOLVE_ERR);
+				} catch (SendIntentException e) {
+					mConnectionResult = null;
+					mPlusClient.connect();
+				}
+			}
+		}
+		if (view.getId() == R.id.sign_out_button) {
+			Log.d(TAG, "sign out pressed");
+			if (mPlusClient.isConnected()) {
+				mPlusClient.clearDefaultAccount();
+				mPlusClient.disconnect();
+				Toast.makeText(this, "You are disconnected!", Toast.LENGTH_LONG)
+						.show();
 
+				Log.d(TAG, "disconnected=" + !mPlusClient.isConnected());
+			}
+		}
 
-				Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-				// if button is clicked, close the custom dialog
-				dialogButton.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-	 
-				dialog.show();
-			  }
-			
+	}
 
-@Override
-public void onPeopleLoaded(ConnectionResult status, PersonBuffer personBuffer,
-        String nextPageToken) {
-    if (status.getErrorCode() == ConnectionResult.SUCCESS) {
-        try {
-            int count = personBuffer.getCount();
-            for (int i = 0; i < count; i++) {
-                Log.d(TAG, "Display Name: " + personBuffer.get(i).getDisplayName());
-            }
-        } finally {
-            personBuffer.close();
-        }
-    } else {
-        Log.e(TAG, "Error listing people: " + status.getErrorCode());
-    }
-}
+	/**
+	 * Creates a dialog with user details after sign in
+	 * 
+	 * @param personPhoto
+	 *            user photo url
+	 * @param personName
+	 *            user name
+	 * @param accountEmail
+	 *            user email
+	 * 
+	 */
 
+	private void createUserDialog(String accountEmail, String personName,
+			String personPhoto) {
+		final Dialog dialog = new Dialog(Login.this);
+		dialog.setContentView(R.layout.activity_user_details);
+		dialog.setTitle("User Details");
 
-@Override
-protected void onStart() {
-    super.onStart();
-}
+		emailTV = (TextView) dialog.findViewById(R.id.txt_email);
+		emailTV.setText(accountEmail);
+		nameTV = (TextView) dialog.findViewById(R.id.txt_name);
+		nameTV.setText(personName);
 
-@Override
-protected void onStop() {
-    super.onStop();
-    if (mPlusClient.isConnected()){
-    mPlusClient.disconnect();
-    }
-    
-}
+		ImageView photo = (ImageView) dialog.findViewById(R.id.userimage);
+		UrlImageViewHelper.setUrlDrawable(photo, personPhoto);
+		dialog.show();
+		Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
 
-	
-@Override
-public void onConnectionFailed(ConnectionResult result) {
-       if (mConnectionProgressDialog.isShowing()) {
-               // The user clicked the sign-in button already. Start to resolve
-               // connection errors. Wait until onConnected() to dismiss the
-               // connection dialog.
-               if (result.hasResolution()) {
-                       try {
-                               result.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
-                       } catch (SendIntentException e) {
-                               mPlusClient.connect();
-                       }
-               }
-       }
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-       // Save the intent so that we can start an activity when the user clicks
-       // the sign-in button.
-       mConnectionResult = result;
-}
+				name = nameTV.getText().toString();
+				email = emailTV.getText().toString();
 
+				new RegisterUserTask().execute(email, name);
+				// new GetUser().execute(email);
+			}
+		});
 
-@Override
-protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
-    if (requestCode == REQUEST_CODE_RESOLVE_ERR && responseCode == RESULT_OK) {
-        mConnectionResult = null;
-        mPlusClient.connect();
-    } 
-}
+	}
 
-@Override
-public void onConnected(Bundle connectionHint) {
-mConnectionProgressDialog.dismiss();
- String accountName = mPlusClient.getAccountName();
- Toast.makeText(this, accountName + " is connected." , Toast.LENGTH_SHORT).show();
-// mPlusClient.loadVisiblePeople(this, Person.Collection.VISIBLE);
+	@Override
+	public void onPeopleLoaded(ConnectionResult status,
+			PersonBuffer personBuffer, String nextPageToken) {
+		if (status.getErrorCode() == ConnectionResult.SUCCESS) {
+			try {
+				int count = personBuffer.getCount();
+				for (int i = 0; i < count; i++) {
+					Log.d(TAG, "Display Name: "
+							+ personBuffer.get(i).getDisplayName());
+				}
+			} finally {
+				personBuffer.close();
+			}
+		} else {
+			Log.e(TAG, "Error listing people: " + status.getErrorCode());
+		}
+	}
 
- if (mPlusClient.getCurrentPerson() != null) {
-     Person currentPerson = mPlusClient.getCurrentPerson();
-     String personName = currentPerson.getDisplayName();
-     String personPhoto = currentPerson.getImage().getUrl();
-     
-     Log.d(TAG,"User Details \n"+"Email="+accountName+" Name="+personName+" Photo URL="+personPhoto);
-     
-     createUserDialog(accountName,personName,personPhoto);
+	@Override
+	protected void onStart() {
+		super.onStart();
 
-     //example savetoDb(accountName,personName,personPhoto.getUrl());
- }
- }
+	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (mPlusClient.isConnected()) {
+			mPlusClient.disconnect();
 
-@Override
-public void onDisconnected() {
-	// TODO Auto-generated method stub
-	
-}
+		}
+
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		if (mConnectionProgressDialog.isShowing()) {
+			if (result.hasResolution()) {
+				try {
+					result.startResolutionForResult(this,
+							REQUEST_CODE_RESOLVE_ERR);
+				} catch (SendIntentException e) {
+					mPlusClient.connect();
+				}
+			}
+		}
+
+		mConnectionResult = result;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int responseCode,
+			Intent intent) {
+		if (requestCode == REQUEST_CODE_RESOLVE_ERR
+				&& responseCode == RESULT_OK) {
+			mConnectionResult = null;
+			mPlusClient.connect();
+		}
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		mConnectionProgressDialog.dismiss();
+		String accountName = mPlusClient.getAccountName();
+		Toast.makeText(this, accountName + " is connected.", Toast.LENGTH_SHORT)
+				.show();
+
+		if (mPlusClient.getCurrentPerson() != null) {
+			Person currentPerson = mPlusClient.getCurrentPerson();
+			String personName = currentPerson.getDisplayName();
+			String personPhoto = currentPerson.getImage().getUrl();
+
+			Log.d(TAG, "User Details \n" + "Email=" + accountName + " Name="
+					+ personName + " Photo URL=" + personPhoto);
+
+			createUserDialog(accountName, personName, personPhoto);
+		}
+	}
+
+	private class RegisterUserTask extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				userBUS.RegisterUser(params[0], params[1]);
+				return "success";
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.d(TAG, "Error" + e);
+				return "Error";
+			}
+		}
+
+		protected void onPostExecute(String result) {
+			if (result.equals("success")) {// MainActivity UserProfile
+				Intent intent = new Intent(getBaseContext(), UserProfile.class);
+				intent.putExtra("UserEmail", email);
+
+				intent.putExtra("UserName", name);
+
+				finish();
+				startActivity(intent);
+			}
+		}
+	}
+
+	private class GetUser extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				userBUS.GetUser(params[1]);
+				return "success";
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.d(TAG, "Error" + e);
+				return "Error";
+			}
+
+		}
+
+	}
+
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+
+	}
 }
