@@ -4,27 +4,50 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-	<TextView
-	  	android:id="@+id/reviewUser" 
-	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content" >
-	</TextView>
-
-	<TextView
-	  	android:id="@+id/reviewDate" 
-	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content" >
-	</TextView>
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dip" >
+    
 		<TextView
-	  	android:id="@+id/reviewComment" 
-	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content" >
-	</TextView>
-		<RatingBar
+		  	android:id="@+id/reviewUser" 
+		  	android:layout_width="wrap_content"
+		  	android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:textStyle="bold"
+	        android:textColor="@color/appBlueText" ></TextView>
+	
+		<TextView
+		  	android:id="@+id/onText" 
+		  	android:layout_width="wrap_content"
+		  	android:layout_height="wrap_content"
+	        android:paddingRight="8dip"
+	        android:paddingLeft="8dip"
+	        android:layout_toRightOf="@id/reviewUser"
+	        android:layout_alignBaseline="@id/reviewUser"
+	        android:text="on" ></TextView>
+		
+		<TextView
+		  	android:id="@+id/reviewDate"
+		  	android:layout_width="wrap_content"
+		  	android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/reviewUser"
+	        android:layout_toRightOf="@id/onText" ></TextView>
+	
+	</RelativeLayout>
+
+	<RatingBar
 	  	android:id="@+id/reviewRating" 
 	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content" >
-	</RatingBar>
-		
+	  	android:layout_height="wrap_content"
+	  	style="?android:attr/ratingBarStyleSmall" 
+        android:paddingTop="6dip" ></RatingBar>
+	
+	<TextView
+	  	android:id="@+id/reviewComment" 
+	  	android:layout_width="wrap_content"
+	  	android:layout_height="wrap_content"
+        android:paddingTop="8dip" 
+        android:paddingBottom="10dip" ></TextView>
 
 </LinearLayout>

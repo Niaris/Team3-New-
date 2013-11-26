@@ -32,7 +32,6 @@ public class ReviewsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DBConnection = new MySQLConnection();
-		DBConnection.open();
 		ReviewBUS = new ReviewBusiness(DBConnection);
 		setContentView(R.layout.activity_reviews);
 		getIntentContent();
@@ -41,10 +40,15 @@ public class ReviewsActivity extends Activity {
 
 	private void loadLocationAndReviews() {
 		setTitle("Reviews of " + Location.getName());
+		TextView locationNameTV = (TextView) findViewById(R.id.locationName);
 		TextView locationAddressTV = (TextView) findViewById(R.id.locationAddress);
+		TextView reviewsCount = (TextView) findViewById(R.id.numberOfReviews);
 		ListView reviewsListView = (ListView) findViewById(R.id.reviewsList);
-		locationAddressTV.setText(Location.getAddress());
+		
 		List<ReviewVO> reviews = ReviewBUS.retrieveReviewsList(Location.getID());
+		locationAddressTV.setText(Location.getAddress());
+		locationNameTV.setText(Location.getName());
+		reviewsCount.setText(reviews.size() + " reviews");
 		final StableArrayAdapter adapter = new StableArrayAdapter(this,
 			        android.R.layout.simple_list_item_1, reviews);
 	    reviewsListView.setAdapter(adapter);
