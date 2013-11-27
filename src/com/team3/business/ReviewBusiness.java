@@ -3,8 +3,6 @@ package com.team3.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.*;
 
@@ -22,12 +20,9 @@ public class ReviewBusiness {
 		if(location.getID() == 0) {
 			int newID = LocationBUS.registerLocation(location);
 			review.setLocationID(newID);
-			Log.d("Ellis", "nova location: " + newID);
 		}
 		validateReviewVO(review);
-		Log.d("Ellis'", "Review validated");
 		DBConnection.addReview(review);
-		Log.d("Ellis", "Review added");
 	}
 	
 	private void validateReviewVO(ReviewVO review) throws Exception {

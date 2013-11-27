@@ -67,7 +67,7 @@ public class UserProfile extends Activity implements View.OnClickListener {
 		protected String doInBackground(String... params) {
 			try {
 				success = userBUS.AddUserProfile(params[0], params[1],
-						params[2], params[3]);
+						params[2]);
 				return "success";
 
 			} catch (Exception e) {
@@ -91,7 +91,7 @@ public class UserProfile extends Activity implements View.OnClickListener {
 							Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(getBaseContext(),
 							UserProfileDetails.class);
-					intent.putExtra("useremail", useremail);
+					intent.putExtra("UserEmail", useremail);
 
 					finish();
 					startActivity(intent);
@@ -127,12 +127,13 @@ public class UserProfile extends Activity implements View.OnClickListener {
 						Toast.LENGTH_LONG).show();
 			} else {
 
-				new AddUserProfile().execute(name, interest, useremail, UserId);
+				new AddUserProfile().execute(name, interest, useremail);
 
 			}
 
 		} else if (v.getId() == R.id.btCancelEditDetails) {
 			Intent intent = new Intent(getBaseContext(), MainActivity.class);
+			intent.putExtra("UserEmail", useremail);
 
 			finish();
 			startActivity(intent);

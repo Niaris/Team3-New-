@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -390,10 +389,10 @@ public class PlacesActivity extends FragmentActivity implements
 			setTextViewColor(Color.WHITE);
 			linearLayout.setBackgroundColor(Color.parseColor("#22FFFFFF"));
 			break;
-		case R.id.UserProfileEdit:
-			Intent intent1 = new Intent(this, UserProfile.class);
-			this.startActivity(intent1);
-			break;
+		/*
+		 * case R.id.UserProfileEdit: Intent intent1 = new Intent(this,
+		 * UserProfile.class); this.startActivity(intent1); break;
+		 */
 		default:
 			break;
 

@@ -10,63 +10,21 @@
     tools:context=".ReviewsActivity" >
 
     <TextView
-        android:id="@+id/locationName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dip"
-        android:textSize="24sp"
-        android:textColor="@color/appBlueText" />
-    
-    
-    <LinearLayout 
+        android:id="@+id/locationAddress"
         android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"    >
-    
+        android:layout_height="wrap_content"
+        android:text="ENDERECO" />
+
     <RatingBar
         android:id="@+id/locationRating"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/ratingBarStyleIndicator" />
-    
-    <TextView
-        android:id="@+id/numberOfReviews"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dip"
-        android:paddingBottom="15dip"
-        android:paddingRight="5dip"
-        android:paddingLeft="5dip"
-        android:text="8 reviews"
-        android:textSize="14sp" />
-    
-    </LinearLayout>
-    
-    <TextView
-        android:id="@+id/locationAddress"
-        style="@style/CheckinForm"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/appBlueBackground"
-        android:maxLines="10"
-        android:paddingTop="15dip"
-        android:paddingBottom="15dip"
-        android:paddingRight="5dip"
-        android:paddingLeft="5dip"
-        android:textSize="16sp" />
+        android:layout_height="wrap_content" />
     
 
     <Gallery
         android:id="@+id/gallery1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
-    <View
-    android:layout_width="fill_parent"
-    android:layout_height="1dp"
-    android:background="@android:color/darker_gray"
-    android:paddingTop="3dip"
-    android:paddingBottom="3dip" />
 
     <ListView
         android:id="@+id/reviewsList"

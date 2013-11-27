@@ -49,10 +49,11 @@ public class UserProfileDetails extends Activity implements
 	private ListView listView;
 
 	/** The s user id. */
-	public String sUserId;
-
+	public String sUserEmail;
+	public String userEmail;
 	/** The Tvuser id. */
 	public TextView TvuserId;
+	public TextView TVemail;
 
 	/*
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -66,10 +67,21 @@ public class UserProfileDetails extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile_details);
+		// getIntentDetails();
 		listView = (ListView) findViewById(R.id.listView1);
+		getIntentDetails();
 		accessWebService();
 
 		findViewById(R.id.btnEditDetails).setOnClickListener(this);
+
+	}
+
+	public void getIntentDetails() {
+		TVemail = (TextView) findViewById(R.id.UserId);
+
+		Intent intent = getIntent();
+		userEmail = intent.getStringExtra("UserEmail");
+		TVemail.setText(userEmail);
 	}
 
 	/*
@@ -161,12 +173,12 @@ public class UserProfileDetails extends Activity implements
 	public void accessWebService() {
 
 		TvuserId = (TextView) findViewById(R.id.UserId);
-		sUserId = TvuserId.getText().toString();
+		String useremail = TvuserId.getText().toString();
 
 		JsonReadTask task = new JsonReadTask();
 
-		task.execute(new String[] { "http://54.246.220.68/GetAllUserProfiles.php"
-				+ "?UserId=" + sUserId });
+		task.execute(new String[] { "http://54.246.220.68/GetUserProfileDetails.php"
+				+ "?useremail=" + useremail });
 	}
 
 	/**
@@ -227,6 +239,10 @@ public class UserProfileDetails extends Activity implements
 	public void onClick(View v) {
 		if (v.getId() == R.id.btnEditDetails) {
 			Intent intent = new Intent(getBaseContext(), UserProfile.class);
+			intent.putExtra("UserEmail", userEmail);
+
+			// intent.putExtra("UserName", name);
+
 			finish();
 			startActivity(intent);
 		}

@@ -26,22 +26,51 @@ import com.team3.R;
 import com.team3.business.UserBusiness;
 import com.team3.dataaccess.MySQLConnection;
 
+/**
+ * The Class Login.
+ */
 public class Login extends Activity implements View.OnClickListener,
 		ConnectionCallbacks, OnConnectionFailedListener,
 		PlusClient.OnPeopleLoadedListener {
 
+	/** The Constant TAG. */
 	private static final String TAG = "Login";
+
+	/** The Constant REQUEST_CODE_RESOLVE_ERR. */
 	private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+
+	/** The m connection progress dialog. */
 	private ProgressDialog mConnectionProgressDialog;
+
+	/** The m plus client. */
 	private PlusClient mPlusClient;
+
+	/** The m connection result. */
 	private ConnectionResult mConnectionResult;
+
+	/** The name tv. */
 	public TextView nameTV;
+
+	/** The email tv. */
 	public TextView emailTV;
+
+	/** The email. */
 	public String email;
+
+	/** The name. */
 	public String name;
+
+	/** The user bus. */
 	private UserBusiness userBUS;
+
+	/** The success. */
 	int success;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +90,11 @@ public class Login extends Activity implements View.OnClickListener,
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.sign_in_button && !mPlusClient.isConnected()) {
@@ -92,15 +126,14 @@ public class Login extends Activity implements View.OnClickListener,
 	}
 
 	/**
-	 * Creates a dialog with user details after sign in
+	 * Creates a dialog with user details after sign in.
 	 * 
-	 * @param personPhoto
-	 *            user photo url
-	 * @param personName
-	 *            user name
 	 * @param accountEmail
 	 *            user email
-	 * 
+	 * @param personName
+	 *            user name
+	 * @param personPhoto
+	 *            user photo url
 	 */
 
 	private void createUserDialog(String accountEmail, String personName,
@@ -134,6 +167,14 @@ public class Login extends Activity implements View.OnClickListener,
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.plus.PlusClient.OnPeopleLoadedListener#onPeopleLoaded
+	 * (com.google.android.gms.common.ConnectionResult,
+	 * com.google.android.gms.plus.model.people.PersonBuffer, java.lang.String)
+	 */
 	@Override
 	public void onPeopleLoaded(ConnectionResult status,
 			PersonBuffer personBuffer, String nextPageToken) {
@@ -152,12 +193,22 @@ public class Login extends Activity implements View.OnClickListener,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
 	@Override
 	protected void onStart() {
 		super.onStart();
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -168,6 +219,13 @@ public class Login extends Activity implements View.OnClickListener,
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.android.gms.common.GooglePlayServicesClient.
+	 * OnConnectionFailedListener
+	 * #onConnectionFailed(com.google.android.gms.common.ConnectionResult)
+	 */
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
 		if (mConnectionProgressDialog.isShowing()) {
@@ -184,6 +242,12 @@ public class Login extends Activity implements View.OnClickListener,
 		mConnectionResult = result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int responseCode,
 			Intent intent) {
@@ -194,6 +258,13 @@ public class Login extends Activity implements View.OnClickListener,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks
+	 * #onConnected(android.os.Bundle)
+	 */
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		mConnectionProgressDialog.dismiss();
@@ -213,8 +284,16 @@ public class Login extends Activity implements View.OnClickListener,
 		}
 	}
 
+	/**
+	 * The Class RegisterUserTask.
+	 */
 	private class RegisterUserTask extends AsyncTask<String, String, String> {
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
 		@Override
 		protected String doInBackground(String... params) {
 			try {
@@ -229,6 +308,11 @@ public class Login extends Activity implements View.OnClickListener,
 			}
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
 		protected void onPostExecute(String result) {
 
 			if (success == 1) {
@@ -251,12 +335,20 @@ public class Login extends Activity implements View.OnClickListener,
 		}
 	}
 
+	/**
+	 * The Class GetUser.
+	 */
 	private class GetUser extends AsyncTask<String, String, String> {
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				userBUS.getUser(params[1]);
+				userBUS.GetUser(params[1]);
 				return "success";
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -269,6 +361,13 @@ public class Login extends Activity implements View.OnClickListener,
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks
+	 * #onDisconnected()
+	 */
 	@Override
 	public void onDisconnected() {
 		// TODO Auto-generated method stub

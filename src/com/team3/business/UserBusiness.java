@@ -19,16 +19,15 @@ public class UserBusiness {
 		return DBConnection.RegisterUser(email, name);
 	}
 
-	public int AddUserProfile(String name, String interest, String UserId,
-			String email) {
-		return DBConnection.AddUserProfile(name, interest, email, UserId);
+	public int AddUserProfile(String name, String interest, String email) {
+		return DBConnection.AddUserProfile(name, interest, email);
 	}
 
 	public void GetUserProfile(String email) {
 		DBConnection.GetUserProfile(email);
 	}
 
-	public void getUser(String email) {
+	public void GetUser(String email) {
 		DBConnection.GetUser(email);
 	}
 

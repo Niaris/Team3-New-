@@ -14,7 +14,7 @@
         style="@style/CheckinForm"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/appBlueBackground"
+        android:background="#ddddff"
         android:maxLines="10"
         android:padding="5dip"
         android:textSize="16sp" />

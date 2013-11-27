@@ -3,8 +3,6 @@ package com.team3.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
-
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.LocationVO;
 
@@ -17,21 +15,17 @@ public class LocationBusiness {
 	}
 	
 	
-	public int registerLocation(LocationVO location) throws Exception {
-		validateLocation(location);
-		return DBConnection.registerLocation(location);
+	public int registerLocation(LocationVO location) {
+	// TODO create the method and return its id
+		
+		DBConnection.registerLocation(location);
+		return 0;
 	}
 	
-	private void validateLocation(LocationVO location) throws Exception {
-		if(location.getAddress().isEmpty() || location.getName().isEmpty()) {
-			throw new Exception("Address and Name are mandatory fields");
-		}
-	}
-
 	public List<LocationVO> retrieveLocationsByUserPosition (double latitude, double longitude) {
 		// TODO create the method
 		
-		DBConnection.retrieveLocationsNearByUser(latitude, longitude);
+		DBConnection.retrieveLocationsByUserPosition(latitude, longitude);
 		LocationVO loc1 = new LocationVO("Park Village", 50.870041, -0.090369, "Park Village Name");
 		LocationVO loc2 = new LocationVO("Library", 50.865017, -0.089661, "Library Name");
 		LocationVO loc3 = new LocationVO("Sussex House", 50.864382, -0.086877, "Sussex House Name");

@@ -95,6 +95,8 @@ public class MainActivity extends FragmentActivity implements
 	private int UserID = 1; // TODO get UserID from logged user
 	TextView tvUserName;
 	private String[] mPlaceType;
+	public String userEmail;
+	public TextView TVemail;
 
 	/**
 	 * Method onCreate is used when the page first loads. It will use the method
@@ -114,8 +116,6 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// String email = getIntent().getExtras().getString("UserEmail");
-
 		DBConnection = new MySQLConnection();
 		locationBUS = new LocationBusiness(DBConnection);
 		markerLocationMap = new HashMap<Marker, LocationVO>();
@@ -125,7 +125,7 @@ public class MainActivity extends FragmentActivity implements
 
 		if (servicesOK()) {
 			setContentView(R.layout.activity_map);
-
+			getIntentDetails();
 			if (android.os.Build.VERSION.SDK_INT > 9) {
 				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 						.permitAll().build();
@@ -144,11 +144,18 @@ public class MainActivity extends FragmentActivity implements
 			setContentView(R.layout.activity_main);
 		}
 
+	}// Ends onCreate
+
+	public void getIntentDetails() {
+		TVemail = (TextView) findViewById(R.id.tvUserEmail);
+
 		Intent intent = getIntent();
-		String userEmail = intent.getStringExtra("UserEmail");
+		userEmail = intent.getStringExtra("UserEmail");
 		Toast.makeText(this, "Logged user email is " + userEmail,
 				Toast.LENGTH_LONG).show();
-	}// Ends onCreate
+
+		TVemail.setText(userEmail);
+	}
 
 	private void setUpWindowInfoEvent() {
 		Team3Map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -329,9 +336,25 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.showAllSuggestions:
 			showSuggestedPlaces("ALL");
 			break;
-		case R.id.UserProfileEdit:
-			Intent intent1 = new Intent(this, UserProfile.class);
-			this.startActivity(intent1);
+
+		/*
+		 * case R.id.UserProfileEdit: Intent intent = new
+		 * Intent(getBaseContext(), UserProfile.class);
+		 * intent.putExtra("UserEmail", userEmail);
+		 * 
+		 * // intent.putExtra("UserName", name);
+		 * 
+		 * finish(); startActivity(intent); break;
+		 */
+		case R.id.UserProfileDetails:
+			Intent intent1 = new Intent(getBaseContext(),
+					UserProfileDetails.class);
+			intent1.putExtra("UserEmail", userEmail);
+
+			// intent.putExtra("UserName", name);
+
+			finish();
+			startActivity(intent1);
 			break;
 		case R.id.showNoSuggestions:
 			showSuggestedPlaces("NONE");
@@ -429,6 +452,7 @@ public class MainActivity extends FragmentActivity implements
 		super.onStop();
 		MapStateManager mgr = new MapStateManager(this);
 		mgr.saveMapState(Team3Map);
+		DBConnection.close();
 	}// End onStop
 
 	/**
