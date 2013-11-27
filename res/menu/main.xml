@@ -8,19 +8,19 @@
     
      <item
         android:id="@+id/mapTypeNormal"
-        android:title="Normal"/>
+        android:title="@string/map_normal"/>
     <item
         android:id="@+id/mapTypeSatellite"
-        android:title="Satellite"/>
+        android:title="@string/map_satellite"/>
     <item
         android:id="@+id/mapTypeTerrain"
-        android:title="Terrain"/>
+        android:title="@string/map_terrain"/>
     <item
         android:id="@+id/mapTypeHybrid"
-        android:title="Hybrid"/>
+        android:title="@string/map_hybrid"/>
     <item
         android:id="@+id/mapTypeNone"
-        android:title="None"/>
+        android:title="@string/show_none"/>
 
      <item
         android:id="@+id/gotoCurrentLocation"
@@ -32,15 +32,15 @@
      <item
         android:id="@+id/googlePlaces"
         android:showAsAction="always"
-        android:title="See suggested places" >
+        android:title="@string/suggested_places" >
         <menu>
             <item         
                 android:id="@+id/showAllSuggestions"
-                android:title="Show All" />
+                android:title="@string/show_all" />
             
             <item         
                 android:id="@+id/showNoSuggestions"
-                android:title="Hide All" />   
+                android:title="@string/hide_all" />   
         </menu>
          
          </item>
@@ -50,7 +50,7 @@
      <item 
          android:id="@+id/UserProfileDetails"
          android:showAsAction="never"
-         android:title="Your Profile">
+         android:title="@string/your_profile">
          
      </item>
 </menu>
