@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="39dp"
-        android:text="" />
+        android:text=""
+        android:visibility="gone"  />
 
    
 
@@ -24,9 +25,7 @@
         android:text="@string/button_edit_details" 
         />
 
-    
-<!-- @android:id/list -->
-    <ListView
+        <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

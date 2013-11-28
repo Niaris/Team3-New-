@@ -23,9 +23,9 @@ public class UserBusiness {
 		return DBConnection.AddUserProfile(name, interest, email);
 	}
 
-	public void GetUserProfile(String email) {
+/*	public void GetUserProfile(String email) {
 		DBConnection.GetUserProfile(email);
-	}
+	}*/
 
 	public void GetUser(String email) {
 		DBConnection.GetUser(email);
