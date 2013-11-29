@@ -11,7 +11,6 @@ public class ReviewVO {
 	private String ImagePath;
 	private UserVO User;
 	
-	
 	public ReviewVO(UserVO user, int locationID, int rating, String date,
 			String time, String comment, String imagePath) {
 		this.User = user;
@@ -22,7 +21,6 @@ public class ReviewVO {
 		this.Comment = comment;
 		this.ImagePath = imagePath;
 	}
-	
 	
 	public int getID() {
 		return ID;

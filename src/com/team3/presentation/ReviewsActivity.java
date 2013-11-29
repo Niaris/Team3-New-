@@ -19,20 +19,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class ReviewsActivity extends Activity {
 
 	private MySQLConnection DBConnection;
 	private LocationVO Location;
-	private int UserID;
 	private ReviewBusiness ReviewBUS;
+	private String UserEmail;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DBConnection = new MySQLConnection();
-		DBConnection.open();
 		ReviewBUS = new ReviewBusiness(DBConnection);
 		setContentView(R.layout.activity_reviews);
 		getIntentContent();
@@ -41,13 +41,21 @@ public class ReviewsActivity extends Activity {
 
 	private void loadLocationAndReviews() {
 		setTitle("Reviews of " + Location.getName());
-		TextView locationAddressTV = (TextView) findViewById(R.id.locationAddress);
-		ListView reviewsListView = (ListView) findViewById(R.id.reviewsList);
-		locationAddressTV.setText(Location.getAddress());
-		List<ReviewVO> reviews = ReviewBUS.retrieveReviewsList(Location.getID());
-		final StableArrayAdapter adapter = new StableArrayAdapter(this,
-			        android.R.layout.simple_list_item_1, reviews);
-	    reviewsListView.setAdapter(adapter);
+        TextView locationNameTV = (TextView) findViewById(R.id.locationName);
+        TextView locationAddressTV = (TextView) findViewById(R.id.locationAddress);
+        TextView reviewsCount = (TextView) findViewById(R.id.numberOfReviews);
+        ListView reviewsListView = (ListView) findViewById(R.id.reviewsList);
+        
+        List<ReviewVO> reviews = ReviewBUS.retrieveReviewsList(Location.getID());
+        locationAddressTV.setText(Location.getAddress());
+        locationNameTV.setText(Location.getName());
+        if(reviews.size() < 2)
+        	reviewsCount.setText(reviews.size() + " review");
+        else
+        	reviewsCount.setText(reviews.size() + " reviews");
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,
+                        android.R.layout.simple_list_item_1, reviews);
+        reviewsListView.setAdapter(adapter);
 	}
 
 	@Override
@@ -63,7 +71,7 @@ public class ReviewsActivity extends Activity {
 	private void getIntentContent() {
 		Intent intent = getIntent();
 		Location = (LocationVO) intent.getSerializableExtra("LocationVO");
-		UserID = intent.getIntExtra("UserID", 0);
+		UserEmail = intent.getStringExtra("UserEmail");
 	}
 	
 	private class StableArrayAdapter extends ArrayAdapter<ReviewVO> {
@@ -92,15 +100,18 @@ public class ReviewsActivity extends Activity {
 	    @Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
 	    	LayoutInflater inflater = (LayoutInflater) getBaseContext()
-	    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    	    View rowView = inflater.inflate(R.layout.review_item, parent, false);
-	    	    TextView reviewUserTV = (TextView) rowView.findViewById(R.id.reviewUser);
-	    	    reviewUserTV.setText(getItem(position).getUser().getFirstName() + getItem(position).getUser().getLastName());
-	    	    TextView reviewDateTV = (TextView) rowView.findViewById(R.id.reviewDate);
-	    	    reviewDateTV.setText(getItem(position).getDate());
-	    	    TextView reviewCommentTV = (TextView) rowView.findViewById(R.id.reviewComment);
-	    	    reviewCommentTV.setText(getItem(position).getComment());
-	    	    return rowView;
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View rowView = inflater.inflate(R.layout.review_item, parent, false);
+                ReviewVO review = getItem(position);
+                TextView reviewUserTV = (TextView) rowView.findViewById(R.id.reviewUser);
+                reviewUserTV.setText(review.getUser().getFirstName() + getItem(position).getUser().getLastName());
+                TextView reviewDateTV = (TextView) rowView.findViewById(R.id.reviewDate);
+                reviewDateTV.setText(review.getDate());
+                TextView reviewCommentTV = (TextView) rowView.findViewById(R.id.reviewComment);
+                reviewCommentTV.setText(review.getComment());
+                RatingBar rating = (RatingBar) rowView.findViewById(R.id.reviewRating);
+                rating.setRating(review.getRating());
+                return rowView;
 	    }
 
 	  }

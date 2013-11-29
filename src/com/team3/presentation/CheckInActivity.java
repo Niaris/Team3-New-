@@ -5,6 +5,7 @@ import com.team3.business.ReviewBusiness;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.LocationVO;
 import com.team3.entities.ReviewVO;
+import com.team3.entities.UserVO;
 import com.team3.utils.DateTimeManipulator;
 
 import android.net.Uri;
@@ -35,14 +36,13 @@ public class CheckInActivity extends Activity {
 	private MySQLConnection DBConnection;
 	private LocationVO Location;
 	private ReviewBusiness ReviewBUS;
-	private int UserID;
+	private String UserEmail;
 	private static int RESULT_LOAD_IMAGE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DBConnection = new MySQLConnection();
-		DBConnection.open();
 		ReviewBUS = new ReviewBusiness(DBConnection);
 
 		setContentView(R.layout.activity_check_in);
@@ -57,7 +57,7 @@ public class CheckInActivity extends Activity {
 	private void getIntentContent() {
 		Intent intent = getIntent();
 		Location = (LocationVO) intent.getSerializableExtra("LocationVO");
-		UserID = intent.getIntExtra("UserID", 0);
+		UserEmail = intent.getStringExtra("UserEmail");
 		TextView addressTV = (TextView) this.findViewById(R.id.Address);
 		addressTV.setText(Location.getAddress());
 
@@ -93,7 +93,13 @@ public class CheckInActivity extends Activity {
 	 */
 	public void saveReview(View view) {
 		try {
-			ReviewBUS.addReviewToLocation(createReviewVO(), Location);
+			int success = ReviewBUS.addReviewToLocation(createReviewVO(), Location);
+			if(success == 1) {
+				Intent intent = new Intent(getBaseContext(),
+						MainActivity.class);
+				intent.putExtra("UserEmail", UserEmail);
+				startActivity(intent);
+			}
 		} catch (Exception e) {
 			toastExceptionMessage(e);
 		}
@@ -159,7 +165,7 @@ public class CheckInActivity extends Activity {
 				.findViewById(R.id.imagePathArea);
 		String imagePath = imagePathArea.getText().toString();
 
-		return new ReviewVO(ReviewBUS.getUserByID(UserID), Location.getID(),
+		return new ReviewVO(new UserVO("", "", UserEmail), Location.getID(),
 				rating, date, time, comment, imagePath);
 	}
 

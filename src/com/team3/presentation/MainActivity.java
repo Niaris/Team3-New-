@@ -92,7 +92,6 @@ public class MainActivity extends FragmentActivity implements
 	private LocationBusiness locationBUS;
 	private HashMap<Marker, LocationVO> markerLocationMap;
 	private HashMap<Marker, LocationVO> markerSuggestionMap;
-	private int UserID = 1; // TODO get UserID from logged user
 	TextView tvUserName;
 	private String[] mPlaceType;
 	public String userEmail;
@@ -164,6 +163,8 @@ public class MainActivity extends FragmentActivity implements
 			public void onInfoWindowClick(Marker marker) {
 				if (markerSuggestionMap.containsKey(marker)) {
 					gotoCheckInActivity(markerSuggestionMap.get(marker));
+				} else if(markerLocationMap.containsKey(marker)) {
+					gotoReviewsActivity(markerLocationMap.get(marker));
 				}
 			}
 		});
@@ -175,17 +176,17 @@ public class MainActivity extends FragmentActivity implements
 		markerLocationMap.clear();
 		for (LocationVO loc : locList) {
 			Marker tempMarker = addRedMarker(loc.getLatitude(),
-					loc.getLongitude(), loc.getAddress());
+					loc.getLongitude(), loc.getName());
 			markerLocationMap.put(tempMarker, loc);
 		}
 	}
 
 	private Marker addRedMarker(double latitude, double longitude,
-			String address) {
+			String name) {
 		LatLng ll = new LatLng(latitude, longitude);
 		return Team3Map.addMarker(new MarkerOptions()
 				.position(ll)
-				.title(address)
+				.title(name)
 				.icon(BitmapDescriptorFactory
 						.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 	}
@@ -270,28 +271,18 @@ public class MainActivity extends FragmentActivity implements
 			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map);
 			Team3Map = mapFrag.getMap();
-			Team3Map.setOnMarkerClickListener(new OnMarkerClickListener() {
-				@Override
-				public boolean onMarkerClick(Marker marker) {
-					LocationVO loc = markerLocationMap.get(marker);
-					if (loc != null) {
-						Toast.makeText(getBaseContext(), loc.getAddress(),
-								Toast.LENGTH_SHORT).show();
-						Intent intent = new Intent(getBaseContext(),
-								ReviewsActivity.class);
-						intent.putExtra("LocationVO", loc);
-						intent.putExtra("UserID", UserID);
-						startActivity(intent);
-					}
-					// TODO pass to the new screen to show the reviews!
-					return false;
-				}
-			});
 
 		}
 		return (Team3Map != null);
 	}// Ends initMap
 
+	private void gotoReviewsActivity(LocationVO loc) {
+		Intent intent = new Intent(getBaseContext(),
+				ReviewsActivity.class);
+		intent.putExtra("LocationVO", loc);
+		intent.putExtra("UserEmail", userEmail);
+		startActivity(intent);
+	}
 	/**
 	 * Method onOptionsItemSelected changes the map to Normal, Satellite,
 	 * Terrain, Hybrid and None. Settings are embedded here for future use if
@@ -452,7 +443,6 @@ public class MainActivity extends FragmentActivity implements
 		super.onStop();
 		MapStateManager mgr = new MapStateManager(this);
 		mgr.saveMapState(Team3Map);
-		DBConnection.close();
 	}// End onStop
 
 	/**
@@ -713,7 +703,7 @@ public class MainActivity extends FragmentActivity implements
 	private void gotoCheckInActivity(LocationVO location) {
 		Intent intent = new Intent(this, CheckInActivity.class);
 		intent.putExtra("LocationVO", location);
-		intent.putExtra("UserID", UserID);
+		intent.putExtra("UserEmail", userEmail);
 		startActivity(intent);
 	}
 
