@@ -142,7 +142,7 @@ public class MySQLConnection {
     }
     
 
-    public List<ReviewVO> retrieveReviewsList(int locationID) 
+    public Object[] retrieveReviewsList(int locationID) 
     {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("locationid", String.valueOf(locationID)));
@@ -150,6 +150,7 @@ public class MySQLConnection {
             Log.d("Create Response", json.toString());
             
             List<ReviewVO> ListOfReviews = new ArrayList<ReviewVO>();
+            int avgRating = 0;
             try
             {
             	//int numberOfLikes;
@@ -157,20 +158,20 @@ public class MySQLConnection {
             	for(int i = 0; i < JSONReviews.length(); i++) {
             		JSONObject rev = JSONReviews.getJSONObject(i);
                     String userEmail = rev.getString("User_Email");
-                    String userName = rev.getString("User_Name");
+            //        String userName = rev.getString("User_Name");
                     String time = rev.getString("Review_Time");
                     String date = rev.getString("Review_Date");
                     int rating = rev.getInt("Review_Rating");
                     String comment = rev.getString("Review_Comment");
-                    
-                    ListOfReviews.add(new ReviewVO(new UserVO(userName, "", userEmail), locationID, rating, date, time, comment, ""));
+                    avgRating = rev.getInt("Review_AVG_Rating");
+                    ListOfReviews.add(new ReviewVO(new UserVO(userEmail, "", userEmail), locationID, rating, date, time, comment, ""));
             	}
             } 
             catch (JSONException e) 
             {
                     Log.e("USER", e.getMessage());
             }
-            return ListOfReviews;
+            return new Object[] {ListOfReviews, avgRating};
     }
 
 	public int AddUserProfile(String name, String interest, String useremail) {

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -39,16 +40,21 @@ public class ReviewsActivity extends Activity {
 		loadLocationAndReviews();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadLocationAndReviews() {
 		setTitle("Reviews of " + Location.getName());
         TextView locationNameTV = (TextView) findViewById(R.id.locationName);
         TextView locationAddressTV = (TextView) findViewById(R.id.locationAddress);
         TextView reviewsCount = (TextView) findViewById(R.id.numberOfReviews);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.locationRating);
         ListView reviewsListView = (ListView) findViewById(R.id.reviewsList);
         
-        List<ReviewVO> reviews = ReviewBUS.retrieveReviewsList(Location.getID());
+        Object[] retrieveReviewsList = ReviewBUS.retrieveReviewsList(Location.getID());
+		List<ReviewVO> reviews = (List<ReviewVO>) retrieveReviewsList[0];
+		int avgRating = (Integer) retrieveReviewsList[1];
         locationAddressTV.setText(Location.getAddress());
         locationNameTV.setText(Location.getName());
+        ratingBar.setRating(avgRating);
         if(reviews.size() < 2)
         	reviewsCount.setText(reviews.size() + " review");
         else
@@ -115,5 +121,13 @@ public class ReviewsActivity extends Activity {
 	    }
 
 	  }
+	
+	@Override
+	public void onBackPressed() {
+	    Intent mIntent = new Intent();
+	    mIntent.putExtra("UserEmail", UserEmail);
+	    setResult(RESULT_OK, mIntent);
+	    super.onBackPressed();
+	}
 
 }

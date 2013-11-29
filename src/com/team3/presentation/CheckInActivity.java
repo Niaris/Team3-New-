@@ -38,6 +38,7 @@ public class CheckInActivity extends Activity {
 	private ReviewBusiness ReviewBUS;
 	private String UserEmail;
 	private static int RESULT_LOAD_IMAGE = 1;
+	private static final int REQUEST_CODE = 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class CheckInActivity extends Activity {
 				Intent intent = new Intent(getBaseContext(),
 						MainActivity.class);
 				intent.putExtra("UserEmail", UserEmail);
-				startActivity(intent);
+				startActivityForResult(intent, REQUEST_CODE);
 			}
 		} catch (Exception e) {
 			toastExceptionMessage(e);
@@ -142,6 +143,8 @@ public class CheckInActivity extends Activity {
 			TextView imagePath = (TextView) this
 					.findViewById(R.id.imagePathArea);
 			imagePath.setText(picturePath);
+		} else if(requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+			UserEmail = data.getStringExtra("UserEmail");
 		}
 
 	}
@@ -183,6 +186,14 @@ public class CheckInActivity extends Activity {
 	 */
 	private void toastExceptionMessage(Exception exception) {
 		Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void onBackPressed() {
+	    Intent mIntent = new Intent();
+	    mIntent.putExtra("UserEmail", UserEmail);
+	    setResult(RESULT_OK, mIntent);
+	    super.onBackPressed();
 	}
 
 }

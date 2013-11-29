@@ -33,7 +33,7 @@ public class ReviewBusiness {
 		}
 	}
 
-	public List<ReviewVO> retrieveReviewsList (int locationID) {
+	public Object[] retrieveReviewsList (int locationID) {
 		return DBConnection.retrieveReviewsList(locationID);
 	}
 	

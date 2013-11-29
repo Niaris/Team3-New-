@@ -83,6 +83,7 @@ public class MainActivity extends FragmentActivity implements
 	private static final int GPS_ERRORDIALOG_REQUEST = 9000;
 	public GoogleMap Team3Map;
 	private static final float DEFAULTZOOM = 15;
+	private static final int REQUEST_CODE = 3;
 	public LocationClient mLocationClient;
 	public Marker marker;
 	private XMLGenerator xmlGenerator;
@@ -281,7 +282,7 @@ public class MainActivity extends FragmentActivity implements
 				ReviewsActivity.class);
 		intent.putExtra("LocationVO", loc);
 		intent.putExtra("UserEmail", userEmail);
-		startActivity(intent);
+		startActivityForResult(intent, REQUEST_CODE);
 	}
 	/**
 	 * Method onOptionsItemSelected changes the map to Normal, Satellite,
@@ -704,7 +705,14 @@ public class MainActivity extends FragmentActivity implements
 		Intent intent = new Intent(this, CheckInActivity.class);
 		intent.putExtra("LocationVO", location);
 		intent.putExtra("UserEmail", userEmail);
-		startActivity(intent);
+		startActivityForResult(intent, REQUEST_CODE);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {      
+			  userEmail = data.getStringExtra("UserEmail");
+		  }
+	}
+	
 }// Ends MainActivity
