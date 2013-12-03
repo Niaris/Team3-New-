@@ -18,6 +18,12 @@ public class LocationVO implements Serializable {
 		this.Longitude = longitude;
 		this.Name = name;
 	}
+
+	public LocationVO(String address, String name, int ID) {
+		this.Address = address;
+		this.ID = ID;
+		this.Name = name;
+	}
 	
 	public LocationVO(int id, String address, double latitude, double longitude,
 			String name) {

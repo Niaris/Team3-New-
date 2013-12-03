@@ -28,7 +28,6 @@ import com.team3.dataaccess.MySQLConnection;
 
 /**
  * The Class Login.
- * @author Charis Ioannou
  */
 public class Login extends Activity implements View.OnClickListener,
 		ConnectionCallbacks, OnConnectionFailedListener,
@@ -81,6 +80,7 @@ public class Login extends Activity implements View.OnClickListener,
 		userBUS = new UserBusiness(dbConnection);
 
 		findViewById(R.id.sign_in_button).setOnClickListener(this);
+		findViewById(R.id.sign_out_button).setOnClickListener(this);
 
 		mPlusClient = new PlusClient.Builder(this, this, this).setActions(
 				"http://schemas.google.com/AddActivity",
@@ -111,6 +111,17 @@ public class Login extends Activity implements View.OnClickListener,
 				}
 			}
 		}
+		if (view.getId() == R.id.sign_out_button) {
+			Log.d(TAG, "sign out pressed");
+			if (mPlusClient.isConnected()) {
+				mPlusClient.clearDefaultAccount();
+				mPlusClient.disconnect();
+				Toast.makeText(this, "You are disconnected!", Toast.LENGTH_LONG)
+						.show();
+
+				Log.d(TAG, "disconnected=" + !mPlusClient.isConnected());
+			}
+		}
 
 	}
 
@@ -139,8 +150,8 @@ public class Login extends Activity implements View.OnClickListener,
 		ImageView photo = (ImageView) dialog.findViewById(R.id.userimage);
 		UrlImageViewHelper.setUrlDrawable(photo, personPhoto);
 		dialog.show();
-		
 		Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+
 		dialogButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -148,13 +159,9 @@ public class Login extends Activity implements View.OnClickListener,
 				name = nameTV.getText().toString();
 				email = emailTV.getText().toString();
 
-
 				new RegisterUserTask().execute(email, name);
 				// new GetUser().execute(email);
-				
-				dialog.dismiss();
 
-	
 			}
 		});
 

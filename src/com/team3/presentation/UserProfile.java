@@ -92,6 +92,7 @@ public class UserProfile extends Activity implements View.OnClickListener {
 					Intent intent = new Intent(getBaseContext(),
 							UserProfileDetails.class);
 					intent.putExtra("UserEmail", useremail);
+					intent.putExtra("UserSelected", useremail);
 
 					finish();
 					startActivity(intent);

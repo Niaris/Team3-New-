@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.team3.entities.LocationVO;
 import com.team3.entities.ReviewVO;
+import com.team3.entities.ReviewsListVO;
 import com.team3.entities.UserVO;
 import com.team3.presentation.Login;
 import com.team3.utils.JSONParser;
@@ -31,15 +32,15 @@ public class MySQLConnection {
 	private static String ADD_USER_PHP = "AddUsers.php";
 	private static String GET_USER_ID_PHP = "GetUser.php";
 	private static String ADD_OR_UPDATE_USER_PROFILE_PHP = "AddOrUpdateUserProfile.php";
-	
-	/*New Additions*/
+
+	/* New Additions */
 	private static String ADD_LOCATION_AND_REVIEW_PHP = "AddLocationAndReview.php";
 	private static String GET_LOCATIONS_BY_RADIUS = "GetLocationByRadius.php";
 	private static String GET_REVIEW_BASED_ON_LOCATION = "GetReviewsBasedOnLocation.php";
 	private static String GET_REVIEWS_LOCATIONS_AND_SUM_OF_LIKES = "GetRevLikesSumOfLikes.php";
-    
-    private static String GET_REVIEWS_PHP = "GetReviews.php";
-
+	private static String ADD_LIKE_PHP = "AddLike.php";
+	private static String GET_FAVOURITES_PHP = "GetFavourites.php";
+	private static String GET_REVIEWS_PHP = "GetReviews.php";
 
 	public JSONArray userProfile = null;
 	private ArrayList<HashMap<String, String>> userProfileList;
@@ -82,97 +83,114 @@ public class MySQLConnection {
 		}
 	}
 
-    public List<LocationVO> retrieveLocationsNearByUser(double latitude,double longitude) 
-    {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("latitude", String.valueOf(latitude)));
-            params.add(new BasicNameValuePair("longitude", String.valueOf(longitude)));
-            JSONObject json = jsonParser.makeHttpRequest(SERVER_URL+ GET_LOCATIONS_BY_RADIUS, "GET", params);
+	public List<LocationVO> retrieveLocationsNearByUser(double latitude,
+			double longitude) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("latitude", String.valueOf(latitude)));
+		params.add(new BasicNameValuePair("longitude", String
+				.valueOf(longitude)));
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
+				+ GET_LOCATIONS_BY_RADIUS, "GET", params);
 
-            Log.d("Create Response", json.toString());
-            List<LocationVO> locationsNearBy= new ArrayList<LocationVO>();
-            
-            try 
-            {
-                JSONArray locationsArrayJSON = json.getJSONArray("Locations");
-                for (int i = 0; i < locationsArrayJSON.length(); i++) {
-                    JSONObject loc = locationsArrayJSON.getJSONObject(i);
-                    int id = loc.getInt("Location_ID");
-                    double lat = loc.getDouble("Location_Latitude");
-                    double lon = loc.getDouble("Location_Longitude");
-                    String address = loc.getString("Location_Address");
-                    String name = loc.getString("Location_Name");
-                    
-                    locationsNearBy.add(new LocationVO(id, address, lat, lon, name));
-                }
-            } 
-            catch (JSONException e) 
-            {
-                    Log.e("Locations Nearby", e.getMessage());
-            }
-            return locationsNearBy;
-    }
-    
-    public int addLocationAndReview(LocationVO location, ReviewVO review) {
-    	List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("comment", review.getComment()));
-        params.add(new BasicNameValuePair("rating", String.valueOf(review.getRating())));
-        params.add(new BasicNameValuePair("name", String.valueOf(location.getName())));
-        params.add(new BasicNameValuePair("latitude", String.valueOf(location.getLatitude())));
-        params.add(new BasicNameValuePair("longitude", String.valueOf(location.getLongitude())));
-        params.add(new BasicNameValuePair("address", String.valueOf(location.getAddress())));
-        params.add(new BasicNameValuePair ("email", String.valueOf(review.getUser().getEmailAddress())));
-        params.add(new BasicNameValuePair("locationid", String.valueOf(review.getLocationID())));
+		Log.d("Create Response Locations", json.toString());
+		List<LocationVO> locationsNearBy = new ArrayList<LocationVO>();
 
-        JSONObject json = jsonParser.makeHttpRequest(SERVER_URL + ADD_LOCATION_AND_REVIEW_PHP,"POST", params);
-        Log.d("Create Response", json.toString());
-        int success = 0;
-        try 
-        {
-                success = json.getInt("success");
-                String message = json.getString("message");
-                Log.d("Review", "Success:" + success);
-                Log.d("Review", "Message:" + message);
-        } 
-        catch (JSONException e) 
-        {
-                Log.e("Review", e.getMessage());
-        }
-        return success;
-    }
-    
+		try {
+			JSONArray locationsArrayJSON = json.getJSONArray("Locations");
+			for (int i = 0; i < locationsArrayJSON.length(); i++) {
+				JSONObject loc = locationsArrayJSON.getJSONObject(i);
+				int id = loc.getInt("Location_ID");
+				double lat = loc.getDouble("Location_Latitude");
+				double lon = loc.getDouble("Location_Longitude");
+				String address = loc.getString("Location_Address");
+				String name = loc.getString("Location_Name");
 
-    public Object[] retrieveReviewsList(int locationID) 
-    {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("locationid", String.valueOf(locationID)));
-            JSONObject json = jsonParser.makeHttpRequest(SERVER_URL+ GET_REVIEWS_LOCATIONS_AND_SUM_OF_LIKES, "GET", params);
-            Log.d("Create Response", json.toString());
-            
-            List<ReviewVO> ListOfReviews = new ArrayList<ReviewVO>();
-            int avgRating = 0;
-            try
-            {
-            	//int numberOfLikes;
-            	JSONArray JSONReviews =  json.getJSONArray("review");
-            	for(int i = 0; i < JSONReviews.length(); i++) {
-            		JSONObject rev = JSONReviews.getJSONObject(i);
-                    String userEmail = rev.getString("User_Email");
-            //        String userName = rev.getString("User_Name");
-                    String time = rev.getString("Review_Time");
-                    String date = rev.getString("Review_Date");
-                    int rating = rev.getInt("Review_Rating");
-                    String comment = rev.getString("Review_Comment");
-                    avgRating = rev.getInt("Review_AVG_Rating");
-                    ListOfReviews.add(new ReviewVO(new UserVO(userEmail, "", userEmail), locationID, rating, date, time, comment, ""));
-            	}
-            } 
-            catch (JSONException e) 
-            {
-                    Log.e("USER", e.getMessage());
-            }
-            return new Object[] {ListOfReviews, avgRating};
-    }
+				locationsNearBy
+						.add(new LocationVO(id, address, lat, lon, name));
+			}
+		} catch (JSONException e) {
+			Log.e("Locations Nearby", e.getMessage());
+		}
+		return locationsNearBy;
+	}
+
+	public int addLocationAndReview(LocationVO location, ReviewVO review) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("comment", review.getComment()));
+		params.add(new BasicNameValuePair("rating", String.valueOf(review
+				.getRating())));
+		params.add(new BasicNameValuePair("name", String.valueOf(location
+				.getName())));
+		params.add(new BasicNameValuePair("latitude", String.valueOf(location
+				.getLatitude())));
+		params.add(new BasicNameValuePair("longitude", String.valueOf(location
+				.getLongitude())));
+		params.add(new BasicNameValuePair("address", String.valueOf(location
+				.getAddress())));
+		params.add(new BasicNameValuePair("email", String.valueOf(review
+				.getUser().getEmailAddress())));
+		params.add(new BasicNameValuePair("locationid", String.valueOf(review
+				.getLocationID())));
+
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
+				+ ADD_LOCATION_AND_REVIEW_PHP, "POST", params);
+		Log.d("Create Response", json.toString());
+		int success = 0;
+		try {
+			success = json.getInt("success");
+			String message = json.getString("message");
+			Log.d("Review", "Success:" + success);
+			Log.d("Review", "Message:" + message);
+		} catch (JSONException e) {
+			Log.e("Review", e.getMessage());
+		}
+		return success;
+	}
+
+	public ReviewsListVO retrieveReviewsList(int locationID) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("locationid", String
+				.valueOf(locationID)));
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
+				+ GET_REVIEWS_LOCATIONS_AND_SUM_OF_LIKES, "GET", params);
+		Log.d("Create Response", json.toString());
+
+		List<ReviewVO> ListOfReviews = new ArrayList<ReviewVO>();
+		int avgRating = 0;
+		int numberOfLikes = 0;
+		List<String> usersWhoLiked = new ArrayList<String>();
+		try {
+			JSONArray JSONLikeSum = json.getJSONArray("SumLikes");
+			Log.d("Likes", JSONLikeSum.toString());
+			Log.d("Likes", JSONLikeSum.getJSONObject(0).toString());
+			numberOfLikes = JSONLikeSum.getJSONObject(0).getInt("Likes_Sum");
+
+			JSONArray JSONReviews = json.getJSONArray("review");
+			for (int i = 0; i < JSONReviews.length(); i++) {
+				JSONObject rev = JSONReviews.getJSONObject(i);
+				String userEmail = rev.getString("User_Email");
+				// String userName = rev.getString("User_Name");
+				String time = rev.getString("Review_Time");
+				String date = rev.getString("Review_Date");
+				int rating = rev.getInt("Review_Rating");
+				String comment = rev.getString("Review_Comment");
+				avgRating = rev.getInt("Review_AVG_Rating");
+				ListOfReviews
+						.add(new ReviewVO(new UserVO(userEmail, "", userEmail),
+								locationID, rating, date, time, comment, ""));
+			}
+			JSONArray JSONLikes = json.getJSONArray("Likes");
+			for (int i = 0; i < JSONLikes.length(); i++) {
+				JSONObject rev = JSONLikes.getJSONObject(i);
+				String userEmail = rev.getString("User_EmailAddress");
+				usersWhoLiked.add(userEmail);
+			}
+		} catch (JSONException e) {
+			Log.e("LIKES AND REVIEWS", e.getMessage());
+		}
+		return new ReviewsListVO(ListOfReviews, avgRating, numberOfLikes,
+				usersWhoLiked);
+	}
 
 	public int AddUserProfile(String name, String interest, String useremail) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -201,56 +219,44 @@ public class MySQLConnection {
 		return success;
 	}// Ends AddUserProfile
 
-	/*public void GetUserProfile(String email) {
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-		params.add(new BasicNameValuePair("emailAddress", email));
-
-		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
-				+ GET_USER_PROFILE_DETAILS_PHP, "GET", params);
-
-		Log.d("Create Response", json.toString());
-
-		try {
-			int success = json.getInt(TAG_SUCCESS);
-			String message = json.getString("message");
-			Log.d("USER PROFILE DETAILS GET", message);
-			if (success == 1) {
-				Log.d("USER PROFILE DETAILS GET", "Details GET");
-
-				// Getting Array of Products
-				userProfile = json.getJSONArray(TAG_USER_PROFILE);
-				for (int i = 0; i < userProfile.length(); i++) {
-					JSONObject c = userProfile.getJSONObject(i);
-
-					// Storing each json item in variable
-					String username = c.getString(TAG_USER_NAME);
-					String userinterests = c.getString(TAG_USER_INTERESTS);
-					String usergoogleaccount = c
-							.getString(TAG_USER_GOOGLE_ACCOUNT);
-					String userwhatsappaccount = c
-							.getString(TAG_USER_WHATSAPP_ACOUNT);
-					HashMap<String, String> map = new HashMap<String, String>();
-
-					// adding each child node to HashMap key => value
-					map.put(TAG_USER_NAME, username);
-					map.put(TAG_USER_INTERESTS, userinterests);
-					map.put(TAG_USER_GOOGLE_ACCOUNT, usergoogleaccount);
-					map.put(TAG_USER_WHATSAPP_ACOUNT, userwhatsappaccount);
-
-					// adding HashList to ArrayList
-					userProfileList.add(map);
-				}
-
-			} else {
-
-			}
-		} catch (JSONException e) {
-			Log.e("USER PROFILE DETAILS GET Exception", e.getMessage());
-			e.printStackTrace();
-		}
-	}// Ends GetUserProfile
-*/
+	/*
+	 * public void GetUserProfile(String email) { List<NameValuePair> params =
+	 * new ArrayList<NameValuePair>();
+	 * 
+	 * params.add(new BasicNameValuePair("emailAddress", email));
+	 * 
+	 * JSONObject json = jsonParser.makeHttpRequest(SERVER_URL +
+	 * GET_USER_PROFILE_DETAILS_PHP, "GET", params);
+	 * 
+	 * Log.d("Create Response", json.toString());
+	 * 
+	 * try { int success = json.getInt(TAG_SUCCESS); String message =
+	 * json.getString("message"); Log.d("USER PROFILE DETAILS GET", message); if
+	 * (success == 1) { Log.d("USER PROFILE DETAILS GET", "Details GET");
+	 * 
+	 * // Getting Array of Products userProfile =
+	 * json.getJSONArray(TAG_USER_PROFILE); for (int i = 0; i <
+	 * userProfile.length(); i++) { JSONObject c = userProfile.getJSONObject(i);
+	 * 
+	 * // Storing each json item in variable String username =
+	 * c.getString(TAG_USER_NAME); String userinterests =
+	 * c.getString(TAG_USER_INTERESTS); String usergoogleaccount = c
+	 * .getString(TAG_USER_GOOGLE_ACCOUNT); String userwhatsappaccount = c
+	 * .getString(TAG_USER_WHATSAPP_ACOUNT); HashMap<String, String> map = new
+	 * HashMap<String, String>();
+	 * 
+	 * // adding each child node to HashMap key => value map.put(TAG_USER_NAME,
+	 * username); map.put(TAG_USER_INTERESTS, userinterests);
+	 * map.put(TAG_USER_GOOGLE_ACCOUNT, usergoogleaccount);
+	 * map.put(TAG_USER_WHATSAPP_ACOUNT, userwhatsappaccount);
+	 * 
+	 * // adding HashList to ArrayList userProfileList.add(map); }
+	 * 
+	 * } else {
+	 * 
+	 * } } catch (JSONException e) { Log.e("USER PROFILE DETAILS GET Exception",
+	 * e.getMessage()); e.printStackTrace(); } }// Ends GetUserProfile
+	 */
 	public int RegisterUser(String email, String name) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("name", name));
@@ -301,5 +307,52 @@ public class MySQLConnection {
 
 	}// Ends GetUser
 
-	
+	public void addLikeToLocation(int locationID, String userEmail) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("locationid", String
+				.valueOf(locationID)));
+		params.add(new BasicNameValuePair("useremail", userEmail));
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL + ADD_LIKE_PHP,
+				"POST", params);
+
+		Log.d("Create Response", json.toString());
+
+		try {
+			int success = json.getInt("success");
+			String message = json.getString("message");
+			Log.d("LIKE", message);
+			if (success == 1) {
+				Log.d("LIKE", "Details GET");
+			} else {
+
+			}
+		} catch (JSONException e) {
+			Log.e("USER", e.getMessage());
+		}
+
+	}
+
+	public List<LocationVO> getFavouriteLocations(String userEmail) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("useremail", userEmail));
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
+				+ GET_FAVOURITES_PHP, "GET", params);
+		Log.d("Create Response", json.toString());
+		List<LocationVO> favouriteLocations = new ArrayList<LocationVO>();
+		try {
+			JSONArray JSONFavourites = json.getJSONArray("Favourites");
+			for (int i = 0; i < JSONFavourites.length(); i++) {
+				JSONObject loc = JSONFavourites.getJSONObject(i);
+				String locName = loc.getString("Location_Name");
+				String locAddress = loc.getString("Location_Address");
+				int locID = loc.getInt("Location_ID");
+				favouriteLocations.add(new LocationVO(locAddress, locName,
+						locID));
+			}
+		} catch (JSONException e) {
+			Log.e("FAVOURITES", e.getMessage());
+		}
+		return favouriteLocations;
+	}
+
 }
