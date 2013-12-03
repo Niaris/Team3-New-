@@ -3,34 +3,46 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/appBlueBackground">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="" 
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="155dp" >
+    </com.google.android.gms.common.SignInButton>
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/sign_in_button"
-        android:text="Welcome to Team 3. You can sign in with Google+" />
+        android:layout_alignTop="@+id/sign_in_button"
+        android:layout_marginTop="53dp"
+        android:text="@string/welcome_text" 
+        android:textStyle="bold"/>
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/sign_in_button"
+        android:layout_alignLeft="@+id/sign_in_button"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="123dp" >
-    </com.google.android.gms.common.SignInButton>
-
-    
-
-    <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/proceed_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="55dp"
-        android:text="Sign Out" />
+        android:layout_alignRight="@+id/sign_in_button"
+        android:src="@drawable/map_marker_sign_in" />
 
 </RelativeLayout>

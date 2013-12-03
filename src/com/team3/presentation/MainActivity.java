@@ -419,13 +419,7 @@ public class MainActivity extends FragmentActivity implements
 	 */
 
 	private void setTextViewColor(int color) {
-		//TextView tvLat = (TextView) this.findViewById(R.id.txLat);
-		//TextView tvLon = (TextView) this.findViewById(R.id.txLon);
-		//TextView tvTime = (TextView) this.findViewById(R.id.txTime);
 		TextView tvAddress = (TextView) this.findViewById(R.id.txAddress);
-		//tvLon.setTextColor(color);
-		//tvLat.setTextColor(color);
-		//tvTime.setTextColor(color);
 		tvAddress.setTextColor(color);
 	}// END setTextViewColor
 
