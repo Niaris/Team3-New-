@@ -4,7 +4,7 @@ public class ReviewVO {
 
 	private int ID;
 	private int LocationID;
-	private int rating;
+	private int rating; //TODO change everywhere  to float for half ratings
 	private String Date;
 	private String Time;
 	private String Comment;
