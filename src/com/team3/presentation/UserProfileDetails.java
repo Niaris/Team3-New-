@@ -26,14 +26,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team3.R;
+import com.team3.business.LocationBusiness;
+import com.team3.dataaccess.MySQLConnection;
+import com.team3.entities.LocationVO;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,9 +56,11 @@ public class UserProfileDetails extends Activity implements
 	/** The s user id. */
 	public String sUserEmail;
 	public String userEmail;
+	public String selectedUser;
 	/** The Tvuser id. */
 	public TextView TvuserId;
 	public TextView TVemail;
+	private LocationBusiness LocationBUS;
 
 	/*
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -67,21 +74,35 @@ public class UserProfileDetails extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_profile_details);
+		LocationBUS = new LocationBusiness(new MySQLConnection());
 		// getIntentDetails();
 		listView = (ListView) findViewById(R.id.listView1);
 		getIntentDetails();
 		accessWebService();
-
+		loadFavouriteLocations();
 		findViewById(R.id.btnEditDetails).setOnClickListener(this);
 
 	}
 
+	private void loadFavouriteLocations() {
+		List<LocationVO> locations = LocationBUS.getFavouriteLocations(selectedUser);
+		ListView favListView = (ListView) this.findViewById(R.id.listViewLocations);
+		final FavouritesArrayAdapter adapter = new FavouritesArrayAdapter(this,
+                android.R.layout.simple_list_item_1, locations);
+		favListView.setAdapter(adapter);
+	}
+	
 	public void getIntentDetails() {
 		TVemail = (TextView) findViewById(R.id.UserId);
 
 		Intent intent = getIntent();
 		userEmail = intent.getStringExtra("UserEmail");
-		TVemail.setText(userEmail);
+		selectedUser = intent.getStringExtra("UserSelected");
+		if(!userEmail.equals(selectedUser)) {
+			Button editDetails = (Button) this.findViewById(R.id.btnEditDetails);
+			editDetails.setVisibility(View.GONE);
+		}
+		TVemail.setText(selectedUser);
 	}
 
 	/*
@@ -248,4 +269,13 @@ public class UserProfileDetails extends Activity implements
 		}
 
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    Intent mIntent = new Intent();
+	    mIntent.putExtra("UserEmail", userEmail);
+	    setResult(RESULT_OK, mIntent);
+	    super.onBackPressed();
+	}
+
 }

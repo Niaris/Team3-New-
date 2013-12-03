@@ -8,6 +8,7 @@ import com.team3.business.ReviewBusiness;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.LocationVO;
 import com.team3.entities.ReviewVO;
+import com.team3.entities.ReviewsListVO;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -18,7 +19,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -29,6 +33,7 @@ public class ReviewsActivity extends Activity {
 	private LocationVO Location;
 	private ReviewBusiness ReviewBUS;
 	private String UserEmail;
+	private static final int REQUEST_CODE = 3;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,6 @@ public class ReviewsActivity extends Activity {
 		loadLocationAndReviews();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void loadLocationAndReviews() {
 		setTitle("Reviews of " + Location.getName());
         TextView locationNameTV = (TextView) findViewById(R.id.locationName);
@@ -48,20 +52,45 @@ public class ReviewsActivity extends Activity {
         TextView reviewsCount = (TextView) findViewById(R.id.numberOfReviews);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.locationRating);
         ListView reviewsListView = (ListView) findViewById(R.id.reviewsList);
+        ImageButton likeButton = (ImageButton) findViewById(R.id.likeButton);
+        TextView likesCount = (TextView) findViewById(R.id.numberOfLikes);
         
-        Object[] retrieveReviewsList = ReviewBUS.retrieveReviewsList(Location.getID());
-		List<ReviewVO> reviews = (List<ReviewVO>) retrieveReviewsList[0];
-		int avgRating = (Integer) retrieveReviewsList[1];
+        ReviewsListVO reviewsList = ReviewBUS.retrieveReviewsList(Location.getID());
+		List<ReviewVO> reviews = reviewsList.getListOfReviews();
+		List<String> users = reviewsList.getUsersWhoLiked();
+		int avgRating = reviewsList.getAvgRating();
+		int sumOfLikes = reviewsList.getNumberOfLikes();
+		likesCount.setText(String.valueOf(reviewsList.getNumberOfLikes()));
         locationAddressTV.setText(Location.getAddress());
         locationNameTV.setText(Location.getName());
         ratingBar.setRating(avgRating);
-        if(reviews.size() < 2)
+        if(reviews.size() < 2) {
         	reviewsCount.setText(reviews.size() + " review");
-        else
+        }
+        else {
         	reviewsCount.setText(reviews.size() + " reviews");
+        }
+        if(users.contains(UserEmail)) {
+        	likeButton.setImageResource(R.drawable.heart_full_red);
+        	likeButton.setEnabled(false);
+        } else if(sumOfLikes > 0) {
+        	likeButton.setImageResource(R.drawable.heart_red);
+        }
         final StableArrayAdapter adapter = new StableArrayAdapter(this,
                         android.R.layout.simple_list_item_1, reviews);
         reviewsListView.setAdapter(adapter);
+        reviewsListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position,
+					long id) {
+				TextView email = (TextView) v.findViewById(R.id.reviewUser);
+				Intent intent = new Intent(getBaseContext(), UserProfileDetails.class);
+				intent.putExtra("UserEmail", UserEmail);
+				intent.putExtra("UserSelected", email.getText());
+				startActivityForResult(intent, REQUEST_CODE);
+			}
+		});
 	}
 
 	@Override
@@ -122,6 +151,14 @@ public class ReviewsActivity extends Activity {
 
 	  }
 	
+	public void addLikeToReview(View view) {
+		ReviewBUS.addLikeToLocation(Location.getID(), UserEmail);
+        ImageButton likeButton = (ImageButton) findViewById(R.id.likeButton);
+    	likeButton.setImageResource(R.drawable.heart_full_red);
+    	likeButton.setEnabled(false);
+	}
+	
+	
 	@Override
 	public void onBackPressed() {
 	    Intent mIntent = new Intent();
@@ -130,4 +167,12 @@ public class ReviewsActivity extends Activity {
 	    super.onBackPressed();
 	}
 
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {      
+			  UserEmail = data.getStringExtra("UserEmail");
+		  }
+	}
+	
 }

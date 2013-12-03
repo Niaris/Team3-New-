@@ -1,5 +1,6 @@
 package com.team3.business;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.LocationVO;
@@ -22,6 +23,10 @@ public class LocationBusiness {
         public List<LocationVO> retrieveLocationsByUserPosition (double latitude, double longitude) {
                 return DBConnection.retrieveLocationsNearByUser(latitude, longitude);
         }
+
+		public List<LocationVO> getFavouriteLocations(String userEmail) {
+			return DBConnection.getFavouriteLocations(userEmail);
+		}
         
 }
 

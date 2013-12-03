@@ -4,7 +4,6 @@
  * @author Andreas Stavrou (Initial coding, application works but does not display marker)
  * @author Ellis De Vasconcelos Carvalho (Added Marker on the map)
  * @author Andreas Stavrou (Refactored and Commented)
- * @author Charis Ioannou (some changes to fix memory leakage
  * @version 1.0 - Finished 6 October 2013 | Refactored FINISHED on 16 October 2013 
  */
 
@@ -67,6 +66,7 @@ import com.team3.dataaccess.UploadFiletoServer;
 import com.team3.dataaccess.XMLGenerator;
 import com.team3.entities.LocationVO;
 import com.team3.utils.AddressConversion;
+import com.team3.utils.DateTimeManipulator;
 import com.team3.utils.MapStateManager;
 import com.team3.utils.PlaceJSONParser;
 
@@ -93,6 +93,7 @@ public class MainActivity extends FragmentActivity implements
 	private LocationBusiness locationBUS;
 	private HashMap<Marker, LocationVO> markerLocationMap;
 	private HashMap<Marker, LocationVO> markerSuggestionMap;
+	TextView tvUserName;
 	private String[] mPlaceType;
 	public String userEmail;
 	public TextView TVemail;
@@ -145,7 +146,6 @@ public class MainActivity extends FragmentActivity implements
 
 	}// Ends onCreate
 
-	
 	public void getIntentDetails() {
 		TVemail = (TextView) findViewById(R.id.tvUserEmail);
 
@@ -342,11 +342,8 @@ public class MainActivity extends FragmentActivity implements
 			Intent intent1 = new Intent(getBaseContext(),
 					UserProfileDetails.class);
 			intent1.putExtra("UserEmail", userEmail);
-
-			// intent.putExtra("UserName", name);
-
-			finish();
-			startActivity(intent1);
+			intent1.putExtra("UserSelected", userEmail);
+			startActivityForResult(intent1, REQUEST_CODE);
 			break;
 		case R.id.showNoSuggestions:
 			showSuggestedPlaces("NONE");
@@ -422,8 +419,13 @@ public class MainActivity extends FragmentActivity implements
 	 */
 
 	private void setTextViewColor(int color) {
-	
+		//TextView tvLat = (TextView) this.findViewById(R.id.txLat);
+		//TextView tvLon = (TextView) this.findViewById(R.id.txLon);
+		//TextView tvTime = (TextView) this.findViewById(R.id.txTime);
 		TextView tvAddress = (TextView) this.findViewById(R.id.txAddress);
+		//tvLon.setTextColor(color);
+		//tvLat.setTextColor(color);
+		//tvTime.setTextColor(color);
 		tvAddress.setTextColor(color);
 	}// END setTextViewColor
 
@@ -555,12 +557,26 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onLocationChanged(Location loc) {
 
+		String Date = DateTimeManipulator.getCurrentDate();
+		String Time = DateTimeManipulator.getCurrentTime();
+
 		double LAT = loc.getLatitude();
 		double LONG = loc.getLongitude();
 
 		updateCurrentLocationMarker(LAT, LONG);
 
-	
+		// Text View for showing Latitude
+	//TextView tvLat = (TextView) this.findViewById(R.id.txLat); // NEW ONE
+		//tvLat.setText("Latitude: " + String.valueOf(LAT));
+
+		// Text View for showing Longitude
+		//TextView tvLot = (TextView) this.findViewById(R.id.txLon);
+		//tvLot.setText("Longitude: " + String.valueOf(LONG));
+
+		// Text View for showing Date and Time
+		//TextView tvDateTime = (TextView) this.findViewById(R.id.txTime);
+		//tvDateTime.setText("Date/Time: " + Date + "," + " " + Time);
+
 		// Text View for showing the Address
 		TextView tvAddress = (TextView) this.findViewById(R.id.txAddress);
 
@@ -572,18 +588,17 @@ public class MainActivity extends FragmentActivity implements
 		try {
 			location = ret.getJSONArray("results").getJSONObject(0);
 			location_string = location.getString("formatted_address");
-			Log.d("test", "formatted address:" + location_string);
+			Log.d("test", "formattted address:" + location_string);
 
 			tvAddress.setText(location_string);
 
 			CurrentLocation = new LocationVO(location_string, LAT, LONG, "");
 			loadRegisteredLocations();
 
-			/* This gives the device a UNIQUE ID (NOTE: Try to add this to
-			** another Class).
-			
+			// This gives the device a UNIQUE ID (NOTE: Try to add this to
+			// another Class).
 			String deviceId = Secure.getString(this.getContentResolver(),
-					Secure.ANDROID_ID);*/
+					Secure.ANDROID_ID);
 
 			/*
 			 * IMPORTANT!!! Left this part of the code commented for now,

@@ -31,14 +31,30 @@
     
     <TextView
         android:id="@+id/numberOfReviews"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="15dip"
         android:paddingBottom="15dip"
         android:paddingRight="5dip"
         android:paddingLeft="5dip"
-        android:text="8 reviews"
         android:textSize="14sp" />
+    
+    <ImageButton 
+        android:id="@+id/likeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="25dip"
+        android:src="@drawable/heart_blank"
+        android:onClick="addLikeToReview"
+        android:background="@null" />
+	
+	<TextView
+        android:id="@+id/numberOfLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dip"
+        android:paddingBottom="12dip"
+        android:textSize="16sp" />
     
     </LinearLayout>
     

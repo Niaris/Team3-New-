@@ -5,6 +5,7 @@ import java.util.List;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.LocationVO;
 import com.team3.entities.ReviewVO;
+import com.team3.entities.ReviewsListVO;
 
 public class ReviewBusiness {
 	
@@ -33,8 +34,12 @@ public class ReviewBusiness {
 		}
 	}
 
-	public Object[] retrieveReviewsList (int locationID) {
+	public ReviewsListVO retrieveReviewsList (int locationID) {
 		return DBConnection.retrieveReviewsList(locationID);
+	}
+
+	public void addLikeToLocation(int locationID, String userEmail) {
+		DBConnection.addLikeToLocation(locationID, userEmail);
 	}
 	
 }

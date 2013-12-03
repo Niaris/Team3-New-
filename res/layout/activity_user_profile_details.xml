@@ -30,8 +30,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/UserId"
-        android:layout_marginTop="60dp" >
+        android:layout_marginTop="60dp" />
 
-    </ListView>
-
+                
+    <TextView
+        android:id="@+id/favouritesTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listView1"
+        android:layout_marginTop="39dp"
+        android:text="My favourite locations" />
+            
+        <ListView
+        android:id="@+id/listViewLocations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/favouritesTxt"
+        android:layout_marginTop="60dp" />
+        
 </RelativeLayout>
