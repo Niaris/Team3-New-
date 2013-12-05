@@ -17,8 +17,8 @@ import android.util.Log;
 import com.team3.entities.LocationVO;
 import com.team3.entities.ReviewVO;
 import com.team3.entities.ReviewsListVO;
+import com.team3.entities.UserProfileVO;
 import com.team3.entities.UserVO;
-import com.team3.presentation.Login;
 import com.team3.utils.JSONParser;
 
 public class MySQLConnection {
@@ -36,11 +36,10 @@ public class MySQLConnection {
 	/* New Additions */
 	private static String ADD_LOCATION_AND_REVIEW_PHP = "AddLocationAndReview.php";
 	private static String GET_LOCATIONS_BY_RADIUS = "GetLocationByRadius.php";
-	private static String GET_REVIEW_BASED_ON_LOCATION = "GetReviewsBasedOnLocation.php";
 	private static String GET_REVIEWS_LOCATIONS_AND_SUM_OF_LIKES = "GetRevLikesSumOfLikes.php";
 	private static String ADD_LIKE_PHP = "AddLike.php";
 	private static String GET_FAVOURITES_PHP = "GetFavourites.php";
-	private static String GET_REVIEWS_PHP = "GetReviews.php";
+	private static String GET_USER_PROFILE_DETAILS_PHP = "GetUserProfileDetails.php";
 
 	public JSONArray userProfile = null;
 	private ArrayList<HashMap<String, String>> userProfileList;
@@ -353,6 +352,31 @@ public class MySQLConnection {
 			Log.e("FAVOURITES", e.getMessage());
 		}
 		return favouriteLocations;
+	}
+
+	public UserProfileVO getUserProfileDetails(String userEmail) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("useremail", userEmail));
+		JSONObject json = jsonParser.makeHttpRequest(SERVER_URL
+				+ GET_USER_PROFILE_DETAILS_PHP, "GET", params);
+		Log.d("Create Response", json.toString());
+		UserProfileVO userProfile = null;
+		JSONArray JSONProfiles;
+		try {
+			JSONProfiles = json.getJSONArray("userprofiles");
+			if (JSONProfiles.length() > 0) {
+				JSONObject profile = JSONProfiles.getJSONObject(0);
+				String googleAccount = profile.getString("User_Google_Account");
+				String userName = profile.getString("User_Name");
+				String interests = profile.getString("User_Interests");
+				int id = profile.getInt("User_Profile_ID");
+				userProfile = new UserProfileVO(googleAccount, userName,
+						interests, id);
+			}
+		} catch (JSONException e) {
+			Log.e("Get Profile", e.getMessage());
+		}
+		return userProfile;
 	}
 
 }

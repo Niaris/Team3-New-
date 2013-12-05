@@ -1,6 +1,10 @@
 package com.team3.business;
 
+import java.util.List;
+
 import com.team3.dataaccess.MySQLConnection;
+import com.team3.entities.LocationVO;
+import com.team3.entities.UserProfileVO;
 
 public class UserBusiness {
 
@@ -30,5 +34,12 @@ public class UserBusiness {
 	public void GetUser(String email) {
 		DBConnection.GetUser(email);
 	}
+	
+	public UserProfileVO GetUserProfileDetails(String userEmail) {
+		return DBConnection.getUserProfileDetails(userEmail);
+	}
 
+	public List<LocationVO> getFavouriteLocations(String userEmail) {
+		return DBConnection.getFavouriteLocations(userEmail);
+	}
 }

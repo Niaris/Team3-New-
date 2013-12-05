@@ -228,18 +228,18 @@ containing a value of this type.
         public static final int LinearLayout1=0x7f050019;
         public static final int LinearLayout2=0x7f05001a;
         public static final int LinearLayout3=0x7f050012;
+        public static final int ProfileTxt=0x7f05003a;
         public static final int RateLocationTV=0x7f05000a;
         public static final int RelativeLayout1=0x7f050027;
         public static final int SaveReviewButton=0x7f05000e;
         public static final int TextView1=0x7f05002b;
         public static final int TextView2=0x7f05002e;
-        public static final int UserId=0x7f05003a;
-        public static final int UserProfileDetails=0x7f050055;
-        public static final int action_settings=0x7f05004b;
+        public static final int UserProfileDetails=0x7f050051;
+        public static final int action_settings=0x7f050047;
         public static final int browseFileButton=0x7f050008;
         public static final int btCancelEditDetails=0x7f050038;
         public static final int btSave=0x7f050035;
-        public static final int btnEditDetails=0x7f05003b;
+        public static final int btnEditDetails=0x7f05003c;
         public static final int btn_find=0x7f050010;
         public static final int commentArea=0x7f05000d;
         public static final int dialogButtonOK=0x7f050030;
@@ -247,13 +247,12 @@ containing a value of this type.
         public static final int etUserName=0x7f050032;
         public static final int favouritesTxt=0x7f05003d;
         public static final int gallery1=0x7f050025;
-        public static final int googlePlaces=0x7f050052;
-        public static final int gotoCurrentLocation=0x7f050051;
+        public static final int googlePlaces=0x7f05004e;
+        public static final int gotoCurrentLocation=0x7f05004d;
         public static final int hybrid=0x7f050004;
         public static final int imagePathArea=0x7f050007;
         public static final int imageView1=0x7f050009;
         public static final int likeButton=0x7f050022;
-        public static final int listView1=0x7f05003c;
         public static final int listViewLocations=0x7f05003e;
         public static final int locationAddress=0x7f050024;
         public static final int locationAddressFav=0x7f050041;
@@ -262,25 +261,25 @@ containing a value of this type.
         public static final int locationNameFav=0x7f050040;
         public static final int locationRating=0x7f050020;
         public static final int map=0x7f050011;
-        public static final int mapTypeHybrid=0x7f05004f;
-        public static final int mapTypeNone=0x7f050050;
-        public static final int mapTypeNormal=0x7f05004c;
-        public static final int mapTypeSatellite=0x7f05004d;
-        public static final int mapTypeTerrain=0x7f05004e;
+        public static final int mapTypeHybrid=0x7f05004b;
+        public static final int mapTypeNone=0x7f05004c;
+        public static final int mapTypeNormal=0x7f050048;
+        public static final int mapTypeSatellite=0x7f050049;
+        public static final int mapTypeTerrain=0x7f05004a;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int numberOfLikes=0x7f050023;
         public static final int numberOfReviews=0x7f050021;
-        public static final int onText=0x7f050047;
+        public static final int onText=0x7f050043;
         public static final int ratingBar=0x7f05000b;
-        public static final int reviewComment=0x7f05004a;
-        public static final int reviewDate=0x7f050048;
-        public static final int reviewRating=0x7f050049;
-        public static final int reviewUser=0x7f050046;
+        public static final int reviewComment=0x7f050046;
+        public static final int reviewDate=0x7f050044;
+        public static final int reviewRating=0x7f050045;
+        public static final int reviewUser=0x7f050042;
         public static final int reviewsList=0x7f050026;
         public static final int satellite=0x7f050002;
-        public static final int showAllSuggestions=0x7f050053;
-        public static final int showNoSuggestions=0x7f050054;
+        public static final int showAllSuggestions=0x7f05004f;
+        public static final int showNoSuggestions=0x7f050050;
         public static final int sign_in_button=0x7f050029;
         public static final int spr_place_type=0x7f05000f;
         public static final int terrain=0x7f050003;
@@ -302,11 +301,8 @@ containing a value of this type.
         public static final int txtUniqueID=0x7f050018;
         public static final int txt_email=0x7f05002f;
         public static final int txt_name=0x7f05002d;
-        public static final int usergogoleplus=0x7f050044;
+        public static final int userProfile=0x7f05003b;
         public static final int userimage=0x7f05002c;
-        public static final int userinterest=0x7f050043;
-        public static final int username=0x7f050042;
-        public static final int userwhatsapp=0x7f050045;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -322,8 +318,7 @@ containing a value of this type.
         public static final int activity_user_profile=0x7f030007;
         public static final int activity_user_profile_details=0x7f030008;
         public static final int favourite_item=0x7f030009;
-        public static final int list_item=0x7f03000a;
-        public static final int review_item=0x7f03000b;
+        public static final int review_item=0x7f03000a;
     }
     public static final class menu {
         public static final int check_in=0x7f0b0000;
@@ -504,6 +499,7 @@ containing a value of this type.
         public static final int AppTheme=0x7f0a0001;
         public static final int Button=0x7f0a0003;
         public static final int CheckinForm=0x7f0a0002;
+        public static final int SubTitleProfile=0x7f0a0004;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.

@@ -1,51 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    
-    
     <TextView
-        android:id="@+id/UserId"
+        android:id="@+id/ProfileTxt"
+        style="@style/SubTitleProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="39dp"
-        android:text=""
-        android:visibility="gone"  />
+        android:text="My profile" />
 
-   
+    <TextView
+        android:id="@+id/userProfile"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/appBlueBackground"
+        android:maxLines="10"
+        android:padding="10dip"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btnEditDetails"
+        style="@style/Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/UserId"
-        android:layout_centerHorizontal="true"
-        android:text="@string/button_edit_details" 
-        />
+        android:layout_marginTop="10dip"
+        android:layout_gravity="center"
+        android:text="@string/button_edit_details" />
 
-        <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/UserId"
-        android:layout_marginTop="60dp" />
-
-                
     <TextView
         android:id="@+id/favouritesTxt"
+        style="@style/SubTitleProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listView1"
-        android:layout_marginTop="39dp"
         android:text="My favourite locations" />
-            
-        <ListView
+
+    <ListView
         android:id="@+id/listViewLocations"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/favouritesTxt"
-        android:layout_marginTop="60dp" />
-        
-</RelativeLayout>
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

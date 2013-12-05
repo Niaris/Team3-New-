@@ -23,10 +23,6 @@ public class LocationBusiness {
         public List<LocationVO> retrieveLocationsByUserPosition (double latitude, double longitude) {
                 return DBConnection.retrieveLocationsNearByUser(latitude, longitude);
         }
-
-		public List<LocationVO> getFavouriteLocations(String userEmail) {
-			return DBConnection.getFavouriteLocations(userEmail);
-		}
         
 }
 
