@@ -47,7 +47,7 @@ INSERT INTO `Review` (`Review_Comment`, `Review_Rating`, `Review_ImagePath`, `Re
 --
 
 INSERT INTO `UserProfile` ( `User_Name`, `User_Interests`, `User_Google_Account`) VALUES
-('LoevSmurfs ', 'lalalalala', 'msolomonidou12@googlemail.com');
+('LovevSmurfs ', 'I am drinking tea with the Smurfs every day!', 'msolomonidou12@googlemail.com');
 
 -- ---------------------------------------------------------------
 

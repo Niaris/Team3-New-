@@ -7,13 +7,13 @@
 //The Database Connection
 require_once __DIR__ . '/db_connect1.php';
  
-// connecting to the DB
+// Connecting to the DB
 $db = new DB_CONNECT();
 //Parameter(s)
   $latitude = $_GET['latitude'];
   $longitude = $_GET['longitude'];
 
-//SLQ call to the Stored Procedure
+//SQL call to the Stored Procedure
 $sql = ("call spGetLocationByRadius('$latitude','$longitude')");
 //Result of MySQL Query
 $result = mysql_query($sql);
@@ -27,12 +27,10 @@ $json = array();
         while($row=mysql_fetch_assoc($result)){
 
             //Populatign the json array
-            $json['userprofiles'][]=$row;
+            $json['Locations'][]=$row;
         }//End while
     }//End if
 
-//Close Connection
-mysql_close($con);
 
 //Echo the array
 echo json_encode($json); 

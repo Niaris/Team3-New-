@@ -7,14 +7,14 @@
 //The Database Connection
 require_once __DIR__ . '/db_connect1.php';
  
-// connecting to DB
+// Connecting to DB
 $db = new DB_CONNECT();
 //Parameter(s)
   $locationid = $_GET['locationid'];
 
-//SQL Query
-    $sql = "SELECT Review_Comment, Review_Rating, Review_Date, Review_Time, User_Email FROM vLocationReviews WHERE Location_ID = '$locationid'"; 
-    $sql1 = "SELECT Likes, Location_ID, User_EmailAddress FROM vLocLikes WHERE Location_ID ='$locationid'";
+//SQL Query 
+    $sql = "SELECT Review_Comment, (SELECT ROUND(AVG(Review_Rating)) FROM vLocationReviews1  WHERE Location_ID = '$locationid') AS Review_AVG_Rating, Review_Rating, Review_Date, Review_Time, User_Email FROM vLocationReviews1 WHERE Location_ID = '$locationid'"; 
+    $sql1 = "SELECT User_EmailAddress FROM vLocLikes WHERE Location_ID ='$locationid'";
     $sql2 = "SELECT SUM(Likes) AS Likes_Sum FROM vLocLikes WHERE Location_ID = '$locationid'";
 //Result of MySQL Query
     $result = mysql_query($sql);

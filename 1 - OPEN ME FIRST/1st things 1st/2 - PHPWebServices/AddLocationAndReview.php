@@ -1,14 +1,17 @@
 
 <?php
+ /* 
+    AddLocationAndReview is used to add a Location and Review or just a Review if the location exists based on the parameters that are passed
+    Then it will retrieve the response.
+ */
 
-// array for JSON response
+ //Creating the Response Array
 $response = array();
  
-// check for required fields
+// Check if required data are passed successfully
 if (isset($_POST['name'])) {
-    //&& isset( $_POST['rating'] ) && isset( $_POST['publisher']
-     //&& isset($_POST['name']) && isset( $_POST['latitude'] ) && isset( $_POST['longitude'] ) && isset( $_POST['address'] && isset['email'] ) 
-
+        
+        //Parameter(s)
         $comment = $_POST['comment'];
 		$rating = $_POST['rating']; 
         $name = $_POST['name'];
@@ -20,30 +23,33 @@ if (isset($_POST['name'])) {
 
    
    
-    // include db connect class
+     // The Database Connection
     require_once __DIR__ . '/db_connect1.php';
  
-    // connecting to db
+    // Connecting to the Database
     $db = new DB_CONNECT();
     
-   
+     //SQL Select Query to make check based on IF and ELSE statement
      $query="SELECT * FROM Location WHERE Location_Latitude = '$latitude' AND Location_Longitude = '$longitude'";
+     //Passing the Query above to "selectedResults"
      $selectedResults = mysql_query($query) or die('Error, querry failed');
 
+     //IF Statement to check if the results are null
      if (mysql_fetch_array($selectedResults) == NULL){
+         //If the result is null then a call will be made to StoredProcedure that will add both locaiton and review
          $insertresult = mysql_query("call spAddLocAndRev
          ('$name','$latitude','$longitude','$address','$comment','$rating', '$email', '$locationid')");
-         //'$name','$latitude','$longitude','$address','$comment','$rating', '$email'
+         
                                      
          if ($insertresult) {
-                // successfully inserted into database
+                // Successfully added the passed information
                   $response["success"] = 1;
                  $response["message"] = "Details successfully inserted.";
  
-                  // echoing JSON response
+                  // Echoing JSON response
                   echo json_encode($response);
                } else {
-                 // failed to insert row
+                 // If it the success response is 0 then an error has ccoured. Here we response the mysql error as well
                 $response["success"] = 0;
                 $response["message"] = "Failed to insert" . mysql_error() . " sad";
                 echo json_encode($response);
@@ -51,19 +57,20 @@ if (isset($_POST['name'])) {
 
      }
      else {
+         //If the results are not null then the same call will be made only this time the SP will just add the review
         $insertresult = mysql_query("call spAddLocAndRev
          ('$name','$latitude','$longitude','$address','$comment','$rating', '$email', '$locationid')");
-         //'$name','$latitude','$longitude','$address','$comment','$rating', '$email'
+        
                                      
          if ($insertresult) {
-                // successfully inserted into database
+                // Successfully added the passed information
                   $response["success"] = 1;
                  $response["message"] = "Details successfully updated.";
  
-                  // echoing JSON response
+                  // Echoing JSON response
                   echo json_encode($response);
                } else {
-                 // failed to insert row
+                 // If it the success response is 0 then an error has ccoured. Here we response the mysql error as well
                 $response["success"] = 0;
                 $response["message"] = "Failed to insert" . mysql_error() . " sad";
                 echo json_encode($response);

@@ -1,1 +1,1 @@
-Copy and Paste these to Ubuntu --> var --> www
+Copy and Paste the files to Server. Directory (Using FileZilla or WinSCP or similar to access the server): Ubuntu --> var --> www
